@@ -1,0 +1,1991 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="color-scheme" content="light"/><title>RoboFusion Monitor</title><style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/*! tailwindcss v4.1.10 | MIT License | https://tailwindcss.com */
+@layer properties;
+@layer theme, base, components, utilities;
+@layer theme {
+  :root, :host {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    --color-white: #fff;
+    --spacing: 0.25rem;
+    --text-xs: 0.75rem;
+    --text-xs--line-height: calc(1 / 0.75);
+    --text-sm: 0.875rem;
+    --text-sm--line-height: calc(1.25 / 0.875);
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --tracking-tight: -0.025em;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --animate-spin: spin 1s linear infinite;
+    --blur-sm: 8px;
+    --blur-md: 12px;
+    --aspect-video: 16 / 9;
+    --default-transition-duration: 150ms;
+    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
+    --color-page: #f4f6f2;
+    --color-card: #ffffff;
+    --color-soft: #f7f8f5;
+    --color-ink: #262927;
+    --color-ink-2: #7b817d;
+    --color-line: #e8ebe6;
+    --color-brand: #15965f;
+    --color-brand-strong: #0d8a54;
+    --color-brand-soft: #e9f7ef;
+    --color-lime: #c4db55;
+    --color-danger: #e95757;
+    --color-danger-soft: #fdeeee;
+    --color-warn: #e9a23b;
+    --color-mute: #a8aeaa;
+  }
+}
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+  html, :host {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-feature-settings: var(--default-font-feature-settings, normal);
+    font-variation-settings: var(--default-font-variation-settings, normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+  hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+  abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+  b, strong {
+    font-weight: bolder;
+  }
+  code, kbd, samp, pre {
+    font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-feature-settings: var(--default-mono-font-feature-settings, normal);
+    font-variation-settings: var(--default-mono-font-variation-settings, normal);
+    font-size: 1em;
+  }
+  small {
+    font-size: 80%;
+  }
+  sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sub {
+    bottom: -0.25em;
+  }
+  sup {
+    top: -0.5em;
+  }
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+  :-moz-focusring {
+    outline: auto;
+  }
+  progress {
+    vertical-align: baseline;
+  }
+  summary {
+    display: list-item;
+  }
+  ol, ul, menu {
+    list-style: none;
+  }
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    vertical-align: middle;
+  }
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+  button, input, select, optgroup, textarea, ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: bolder;
+  }
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+  }
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+  ::placeholder {
+    opacity: 1;
+  }
+  @supports (not (-webkit-appearance: -apple-pay-button))  or (contain-intrinsic-size: 1px) {
+    ::placeholder {
+      color: currentcolor;
+      @supports (color: color-mix(in lab, red, red)) {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
+      }
+    }
+  }
+  textarea {
+    resize: vertical;
+  }
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+  ::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+  button, input:where([type="button"], [type="reset"], [type="submit"]), ::file-selector-button {
+    appearance: button;
+  }
+  ::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+    height: auto;
+  }
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}
+@layer utilities {
+  .pointer-events-none {
+    pointer-events: none;
+  }
+  .absolute {
+    position: absolute;
+  }
+  .relative {
+    position: relative;
+  }
+  .sticky {
+    position: sticky;
+  }
+  .inset-x-0 {
+    inset-inline: calc(var(--spacing) * 0);
+  }
+  .top-0 {
+    top: calc(var(--spacing) * 0);
+  }
+  .top-1\.5 {
+    top: calc(var(--spacing) * 1.5);
+  }
+  .top-1\/2 {
+    top: calc(1/2 * 100%);
+  }
+  .top-4 {
+    top: calc(var(--spacing) * 4);
+  }
+  .right-1\.5 {
+    right: calc(var(--spacing) * 1.5);
+  }
+  .bottom-0 {
+    bottom: calc(var(--spacing) * 0);
+  }
+  .left-3 {
+    left: calc(var(--spacing) * 3);
+  }
+  .left-4 {
+    left: calc(var(--spacing) * 4);
+  }
+  .z-10 {
+    z-index: 10;
+  }
+  .z-30 {
+    z-index: 30;
+  }
+  .mx-auto {
+    margin-inline: auto;
+  }
+  .my-4 {
+    margin-block: calc(var(--spacing) * 4);
+  }
+  .mt-0\.5 {
+    margin-top: calc(var(--spacing) * 0.5);
+  }
+  .mt-1 {
+    margin-top: calc(var(--spacing) * 1);
+  }
+  .mt-1\.5 {
+    margin-top: calc(var(--spacing) * 1.5);
+  }
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
+  }
+  .mt-2\.5 {
+    margin-top: calc(var(--spacing) * 2.5);
+  }
+  .mt-3 {
+    margin-top: calc(var(--spacing) * 3);
+  }
+  .mt-4 {
+    margin-top: calc(var(--spacing) * 4);
+  }
+  .mt-5 {
+    margin-top: calc(var(--spacing) * 5);
+  }
+  .mb-2\.5 {
+    margin-bottom: calc(var(--spacing) * 2.5);
+  }
+  .ml-1 {
+    margin-left: calc(var(--spacing) * 1);
+  }
+  .ml-2 {
+    margin-left: calc(var(--spacing) * 2);
+  }
+  .flex {
+    display: flex;
+  }
+  .grid {
+    display: grid;
+  }
+  .hidden {
+    display: none;
+  }
+  .inline-flex {
+    display: inline-flex;
+  }
+  .aspect-video {
+    aspect-ratio: var(--aspect-video);
+  }
+  .h-1\.5 {
+    height: calc(var(--spacing) * 1.5);
+  }
+  .h-2 {
+    height: calc(var(--spacing) * 2);
+  }
+  .h-3 {
+    height: calc(var(--spacing) * 3);
+  }
+  .h-6 {
+    height: calc(var(--spacing) * 6);
+  }
+  .h-7 {
+    height: calc(var(--spacing) * 7);
+  }
+  .h-8 {
+    height: calc(var(--spacing) * 8);
+  }
+  .h-9 {
+    height: calc(var(--spacing) * 9);
+  }
+  .h-11 {
+    height: calc(var(--spacing) * 11);
+  }
+  .h-\[72px\] {
+    height: 72px;
+  }
+  .h-full {
+    height: 100%;
+  }
+  .h-px {
+    height: 1px;
+  }
+  .min-h-\[40px\] {
+    min-height: 40px;
+  }
+  .min-h-\[42px\] {
+    min-height: 42px;
+  }
+  .min-h-screen {
+    min-height: 100vh;
+  }
+  .w-1\.5 {
+    width: calc(var(--spacing) * 1.5);
+  }
+  .w-2 {
+    width: calc(var(--spacing) * 2);
+  }
+  .w-3 {
+    width: calc(var(--spacing) * 3);
+  }
+  .w-6 {
+    width: calc(var(--spacing) * 6);
+  }
+  .w-7 {
+    width: calc(var(--spacing) * 7);
+  }
+  .w-8 {
+    width: calc(var(--spacing) * 8);
+  }
+  .w-9 {
+    width: calc(var(--spacing) * 9);
+  }
+  .w-11 {
+    width: calc(var(--spacing) * 11);
+  }
+  .w-full {
+    width: 100%;
+  }
+  .max-w-\[1440px\] {
+    max-width: 1440px;
+  }
+  .min-w-\[820px\] {
+    min-width: 820px;
+  }
+  .flex-1 {
+    flex: 1;
+  }
+  .shrink-0 {
+    flex-shrink: 0;
+  }
+  .border-collapse {
+    border-collapse: collapse;
+  }
+  .-translate-y-1\/2 {
+    --tw-translate-y: calc(calc(1/2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .animate-spin {
+    animation: var(--animate-spin);
+  }
+  .grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .flex-col {
+    flex-direction: column;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  .items-baseline {
+    align-items: baseline;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .items-end {
+    align-items: flex-end;
+  }
+  .items-start {
+    align-items: flex-start;
+  }
+  .justify-between {
+    justify-content: space-between;
+  }
+  .justify-center {
+    justify-content: center;
+  }
+  .gap-1 {
+    gap: calc(var(--spacing) * 1);
+  }
+  .gap-1\.5 {
+    gap: calc(var(--spacing) * 1.5);
+  }
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
+  }
+  .gap-2\.5 {
+    gap: calc(var(--spacing) * 2.5);
+  }
+  .gap-3 {
+    gap: calc(var(--spacing) * 3);
+  }
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
+  .gap-5 {
+    gap: calc(var(--spacing) * 5);
+  }
+  .space-y-3 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 3) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 3) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-5 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 5) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 5) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .overflow-auto {
+    overflow: auto;
+  }
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  .rounded-2xl {
+    border-radius: var(--radius-2xl);
+  }
+  .rounded-\[20px\] {
+    border-radius: 20px;
+  }
+  .rounded-full {
+    border-radius: calc(infinity * 1px);
+  }
+  .rounded-xl {
+    border-radius: var(--radius-xl);
+  }
+  .border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  .border-t {
+    border-top-style: var(--tw-border-style);
+    border-top-width: 1px;
+  }
+  .border-b {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
+  }
+  .border-dashed {
+    --tw-border-style: dashed;
+    border-style: dashed;
+  }
+  .border-danger\/25 {
+    border-color: color-mix(in srgb, #e95757 25%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-danger) 25%, transparent);
+    }
+  }
+  .border-line {
+    border-color: var(--color-line);
+  }
+  .bg-\[\#3b82f6\] {
+    background-color: #3b82f6;
+  }
+  .bg-brand {
+    background-color: var(--color-brand);
+  }
+  .bg-brand-soft {
+    background-color: var(--color-brand-soft);
+  }
+  .bg-brand-soft\/50 {
+    background-color: color-mix(in srgb, #e9f7ef 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-brand-soft) 50%, transparent);
+    }
+  }
+  .bg-brand\/25 {
+    background-color: color-mix(in srgb, #15965f 25%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-brand) 25%, transparent);
+    }
+  }
+  .bg-card {
+    background-color: var(--color-card);
+  }
+  .bg-card\/90 {
+    background-color: color-mix(in srgb, #ffffff 90%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-card) 90%, transparent);
+    }
+  }
+  .bg-danger {
+    background-color: var(--color-danger);
+  }
+  .bg-danger-soft {
+    background-color: var(--color-danger-soft);
+  }
+  .bg-ink {
+    background-color: var(--color-ink);
+  }
+  .bg-ink\/70 {
+    background-color: color-mix(in srgb, #262927 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-ink) 70%, transparent);
+    }
+  }
+  .bg-lime {
+    background-color: var(--color-lime);
+  }
+  .bg-lime\/25 {
+    background-color: color-mix(in srgb, #c4db55 25%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-lime) 25%, transparent);
+    }
+  }
+  .bg-line {
+    background-color: var(--color-line);
+  }
+  .bg-mute {
+    background-color: var(--color-mute);
+  }
+  .bg-page {
+    background-color: var(--color-page);
+  }
+  .bg-page\/85 {
+    background-color: color-mix(in srgb, #f4f6f2 85%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-page) 85%, transparent);
+    }
+  }
+  .bg-soft {
+    background-color: var(--color-soft);
+  }
+  .bg-soft\/70 {
+    background-color: color-mix(in srgb, #f7f8f5 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-soft) 70%, transparent);
+    }
+  }
+  .bg-warn {
+    background-color: var(--color-warn);
+  }
+  .bg-warn\/10 {
+    background-color: color-mix(in srgb, #e9a23b 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-warn) 10%, transparent);
+    }
+  }
+  .bg-warn\/12 {
+    background-color: color-mix(in srgb, #e9a23b 12%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-warn) 12%, transparent);
+    }
+  }
+  .object-cover {
+    object-fit: cover;
+  }
+  .p-0\.5 {
+    padding: calc(var(--spacing) * 0.5);
+  }
+  .p-1 {
+    padding: calc(var(--spacing) * 1);
+  }
+  .p-5 {
+    padding: calc(var(--spacing) * 5);
+  }
+  .p-6 {
+    padding: calc(var(--spacing) * 6);
+  }
+  .px-2\.5 {
+    padding-inline: calc(var(--spacing) * 2.5);
+  }
+  .px-3 {
+    padding-inline: calc(var(--spacing) * 3);
+  }
+  .px-3\.5 {
+    padding-inline: calc(var(--spacing) * 3.5);
+  }
+  .px-4 {
+    padding-inline: calc(var(--spacing) * 4);
+  }
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
+  .px-6 {
+    padding-inline: calc(var(--spacing) * 6);
+  }
+  .py-1 {
+    padding-block: calc(var(--spacing) * 1);
+  }
+  .py-1\.5 {
+    padding-block: calc(var(--spacing) * 1.5);
+  }
+  .py-2\.5 {
+    padding-block: calc(var(--spacing) * 2.5);
+  }
+  .py-3 {
+    padding-block: calc(var(--spacing) * 3);
+  }
+  .py-3\.5 {
+    padding-block: calc(var(--spacing) * 3.5);
+  }
+  .py-4 {
+    padding-block: calc(var(--spacing) * 4);
+  }
+  .py-7 {
+    padding-block: calc(var(--spacing) * 7);
+  }
+  .py-16 {
+    padding-block: calc(var(--spacing) * 16);
+  }
+  .pt-2 {
+    padding-top: calc(var(--spacing) * 2);
+  }
+  .pt-4 {
+    padding-top: calc(var(--spacing) * 4);
+  }
+  .pt-5 {
+    padding-top: calc(var(--spacing) * 5);
+  }
+  .pr-0\.5 {
+    padding-right: calc(var(--spacing) * 0.5);
+  }
+  .pb-1 {
+    padding-bottom: calc(var(--spacing) * 1);
+  }
+  .pb-10 {
+    padding-bottom: calc(var(--spacing) * 10);
+  }
+  .pl-8 {
+    padding-left: calc(var(--spacing) * 8);
+  }
+  .text-center {
+    text-align: center;
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+  .text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+  .text-\[12px\] {
+    font-size: 12px;
+  }
+  .text-\[13px\] {
+    font-size: 13px;
+  }
+  .text-\[14px\] {
+    font-size: 14px;
+  }
+  .text-\[15px\] {
+    font-size: 15px;
+  }
+  .text-\[16px\] {
+    font-size: 16px;
+  }
+  .text-\[17px\] {
+    font-size: 17px;
+  }
+  .text-\[18px\] {
+    font-size: 18px;
+  }
+  .text-\[22px\] {
+    font-size: 22px;
+  }
+  .text-\[24px\] {
+    font-size: 24px;
+  }
+  .text-\[26px\] {
+    font-size: 26px;
+  }
+  .text-\[30px\] {
+    font-size: 30px;
+  }
+  .text-\[40px\] {
+    font-size: 40px;
+  }
+  .text-\[42px\] {
+    font-size: 42px;
+  }
+  .leading-none {
+    --tw-leading: 1;
+    line-height: 1;
+  }
+  .font-medium {
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+  }
+  .font-semibold {
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+  .tracking-tight {
+    --tw-tracking: var(--tracking-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+  .text-brand {
+    color: var(--color-brand);
+  }
+  .text-brand-strong {
+    color: var(--color-brand-strong);
+  }
+  .text-danger {
+    color: var(--color-danger);
+  }
+  .text-ink {
+    color: var(--color-ink);
+  }
+  .text-ink-2 {
+    color: var(--color-ink-2);
+  }
+  .text-warn {
+    color: var(--color-warn);
+  }
+  .text-white {
+    color: var(--color-white);
+  }
+  .shadow-\[0_1px_2px_rgba\(38\,41\,39\,0\.04\)\,0_8px_24px_-16px_rgba\(38\,41\,39\,0\.12\)\] {
+    --tw-shadow: 0 1px 2px var(--tw-shadow-color, rgba(38,41,39,0.04)), 0 8px 24px -16px var(--tw-shadow-color, rgba(38,41,39,0.12));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-sm {
+    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .ring-2 {
+    --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .ring-card {
+    --tw-ring-color: var(--color-card);
+  }
+  .saturate-\[0\.9\] {
+    --tw-saturate: saturate(0.9);
+    filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+  }
+  .backdrop-blur {
+    --tw-backdrop-blur: blur(8px);
+    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  }
+  .backdrop-blur-md {
+    --tw-backdrop-blur: blur(var(--blur-md));
+    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  }
+  .backdrop-blur-sm {
+    --tw-backdrop-blur: blur(var(--blur-sm));
+    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  }
+  .transition-colors {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+  .ease-in-out {
+    --tw-ease: var(--ease-in-out);
+    transition-timing-function: var(--ease-in-out);
+  }
+  .hover\:border-danger\/40 {
+    &:hover {
+      @media (hover: hover) {
+        border-color: color-mix(in srgb, #e95757 40%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          border-color: color-mix(in oklab, var(--color-danger) 40%, transparent);
+        }
+      }
+    }
+  }
+  .hover\:bg-brand-strong {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-brand-strong);
+      }
+    }
+  }
+  .hover\:bg-soft\/70 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, #f7f8f5 70%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-soft) 70%, transparent);
+        }
+      }
+    }
+  }
+  .hover\:text-danger {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-danger);
+      }
+    }
+  }
+  .hover\:text-ink {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-ink);
+      }
+    }
+  }
+  .hover\:brightness-105 {
+    &:hover {
+      @media (hover: hover) {
+        --tw-brightness: brightness(105%);
+        filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+      }
+    }
+  }
+  .sm\:grid-cols-2 {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .sm\:flex-row {
+    @media (width >= 40rem) {
+      flex-direction: row;
+    }
+  }
+  .sm\:items-center {
+    @media (width >= 40rem) {
+      align-items: center;
+    }
+  }
+  .sm\:justify-between {
+    @media (width >= 40rem) {
+      justify-content: space-between;
+    }
+  }
+  .md\:flex {
+    @media (width >= 48rem) {
+      display: flex;
+    }
+  }
+  .md\:grid-cols-2 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .lg\:col-span-4 {
+    @media (width >= 64rem) {
+      grid-column: span 4 / span 4;
+    }
+  }
+  .lg\:col-span-8 {
+    @media (width >= 64rem) {
+      grid-column: span 8 / span 8;
+    }
+  }
+  .lg\:grid-cols-12 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+  }
+  .lg\:px-8 {
+    @media (width >= 64rem) {
+      padding-inline: calc(var(--spacing) * 8);
+    }
+  }
+  .xl\:grid-cols-4 {
+    @media (width >= 80rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+}
+:root {
+  color-scheme: light;
+}
+html, body, #root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background-color: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+::selection {
+  background: rgba(21, 150, 95, 0.16);
+  color: var(--color-ink);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+*:hover::-webkit-scrollbar-thumb, *:focus-within::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+@keyframes livedot {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@property --tw-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-space-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-inset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-ring-inset {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --tw-ring-offset-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: #fff;
+}
+@property --tw-ring-offset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-drop-shadow-size {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ease {
+  syntax: "*";
+  inherits: false;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-translate-z: 0;
+      --tw-space-y-reverse: 0;
+      --tw-border-style: solid;
+      --tw-leading: initial;
+      --tw-font-weight: initial;
+      --tw-tracking: initial;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-color: initial;
+      --tw-shadow-alpha: 100%;
+      --tw-inset-shadow: 0 0 #0000;
+      --tw-inset-shadow-color: initial;
+      --tw-inset-shadow-alpha: 100%;
+      --tw-ring-color: initial;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-inset-ring-color: initial;
+      --tw-inset-ring-shadow: 0 0 #0000;
+      --tw-ring-inset: initial;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-blur: initial;
+      --tw-brightness: initial;
+      --tw-contrast: initial;
+      --tw-grayscale: initial;
+      --tw-hue-rotate: initial;
+      --tw-invert: initial;
+      --tw-opacity: initial;
+      --tw-saturate: initial;
+      --tw-sepia: initial;
+      --tw-drop-shadow: initial;
+      --tw-drop-shadow-color: initial;
+      --tw-drop-shadow-alpha: 100%;
+      --tw-drop-shadow-size: initial;
+      --tw-backdrop-blur: initial;
+      --tw-backdrop-brightness: initial;
+      --tw-backdrop-contrast: initial;
+      --tw-backdrop-grayscale: initial;
+      --tw-backdrop-hue-rotate: initial;
+      --tw-backdrop-invert: initial;
+      --tw-backdrop-opacity: initial;
+      --tw-backdrop-saturate: initial;
+      --tw-backdrop-sepia: initial;
+      --tw-ease: initial;
+    }
+  }
+}
+</style></head><body><div id="root"></div><noscript>This dashboard requires JavaScript.</noscript><script>/* Minimal React-compatible runtime for this exported dashboard only.
+   It preserves the original component source behavior without external JS dependencies. */
+(() => {
+  const hookStore = new Map();
+  let currentKey = null;
+  let hookIndex = 0;
+  let rootContainer = null;
+  let rootVNode = null;
+  let renderQueued = false;
+
+  const flat = (items, out = []) => {
+    for (const item of items) {
+      if (Array.isArray(item)) flat(item, out);
+      else out.push(item);
+    }
+    return out;
+  };
+
+  const React = {
+    createElement(type, props, ...children) {
+      return { type, props: { ...(props || {}), children: flat(children) } };
+    },
+    StrictMode({ children }) { return children; },
+    useState(initial) {
+      const key = currentKey;
+      const idx = hookIndex++;
+      if (!hookStore.has(key)) hookStore.set(key, []);
+      const slots = hookStore.get(key);
+      if (!(idx in slots)) slots[idx] = typeof initial === 'function' ? initial() : initial;
+      const setState = (next) => {
+        slots[idx] = typeof next === 'function' ? next(slots[idx]) : next;
+        queueRender();
+      };
+      return [slots[idx], setState];
+    },
+    useRef(initial) {
+      const key = currentKey;
+      const idx = hookIndex++;
+      if (!hookStore.has(key)) hookStore.set(key, []);
+      const slots = hookStore.get(key);
+      if (!(idx in slots)) slots[idx] = { current: initial };
+      return slots[idx];
+    },
+    useMemo(factory, deps) {
+      const key = currentKey;
+      const idx = hookIndex++;
+      if (!hookStore.has(key)) hookStore.set(key, []);
+      const slots = hookStore.get(key);
+      const old = slots[idx];
+      const same = old && Array.isArray(deps) && Array.isArray(old.deps) && deps.length === old.deps.length && deps.every((v, i) => Object.is(v, old.deps[i]));
+      if (!same) slots[idx] = { value: factory(), deps: deps ? [...deps] : null };
+      return slots[idx].value;
+    },
+  };
+
+  function queueRender() {
+    if (renderQueued) return;
+    renderQueued = true;
+    queueMicrotask(() => {
+      renderQueued = false;
+      renderRoot();
+    });
+  }
+
+  function svgAttrName(name) {
+    if (name === 'viewBox') return 'viewBox';
+    if (name === 'className') return 'class';
+    return name.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+  }
+
+  function applyProps(el, props, isSvg) {
+    let pendingValue;
+    for (const [name, value] of Object.entries(props || {})) {
+      if (name === 'children' || name === 'key' || value == null || value === false) continue;
+      if (name === 'ref') { if (value && typeof value === 'object') value.current = el; continue; }
+      if (name === 'className') { el.setAttribute(isSvg ? 'class' : 'class', value); continue; }
+      if (name === 'style' && typeof value === 'object') { Object.assign(el.style, value); continue; }
+      if (name.startsWith('on') && typeof value === 'function') {
+        let event = name.slice(2).toLowerCase();
+        if (name === 'onChange') event = 'input';
+        el.addEventListener(event, value);
+        continue;
+      }
+      if (name === 'value') { pendingValue = value; continue; }
+      if (!isSvg && name === 'htmlFor') { el.setAttribute('for', value); continue; }
+      if (value === true) { el.setAttribute(isSvg ? svgAttrName(name) : name, ''); continue; }
+      try {
+        if (!isSvg && name in el && !name.startsWith('aria-')) el[name] = value;
+        else el.setAttribute(isSvg ? svgAttrName(name) : name, String(value));
+      } catch {
+        el.setAttribute(isSvg ? svgAttrName(name) : name, String(value));
+      }
+    }
+    if (pendingValue !== undefined) el.value = pendingValue;
+  }
+
+  function renderVNode(vnode, path = '0', inSvg = false) {
+    if (vnode == null || vnode === false || vnode === true) return document.createTextNode('');
+    if (typeof vnode === 'string' || typeof vnode === 'number') return document.createTextNode(String(vnode));
+    if (Array.isArray(vnode)) {
+      const frag = document.createDocumentFragment();
+      vnode.forEach((v, i) => frag.appendChild(renderVNode(v, path + '.' + i, inSvg)));
+      return frag;
+    }
+    if (typeof vnode.type === 'function') {
+      const prevKey = currentKey;
+      const prevIndex = hookIndex;
+      currentKey = path + ':' + (vnode.type.name || 'anon');
+      hookIndex = 0;
+      const out = vnode.type(vnode.props || {});
+      currentKey = prevKey;
+      hookIndex = prevIndex;
+      return renderVNode(out, path + '.c', inSvg);
+    }
+    const tag = vnode.type;
+    const svg = inSvg || tag === 'svg';
+    const el = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+    applyProps(el, vnode.props || {}, svg);
+    const children = (vnode.props && vnode.props.children) || [];
+    children.forEach((child, i) => el.appendChild(renderVNode(child, path + '.' + i, svg)));
+    return el;
+  }
+
+  function renderRoot() {
+    if (!rootContainer) return;
+    const active = document.activeElement;
+    const focusHint = active && rootContainer.contains(active) && active.tagName === 'INPUT'
+      ? { placeholder: active.getAttribute('placeholder'), type: active.getAttribute('type'), start: active.selectionStart, end: active.selectionEnd }
+      : null;
+    rootContainer.replaceChildren(renderVNode(rootVNode));
+    if (focusHint) {
+      let next = null;
+      if (focusHint.placeholder) next = [...rootContainer.querySelectorAll('input')].find(x => x.getAttribute('placeholder') === focusHint.placeholder);
+      if (!next && focusHint.type) next = [...rootContainer.querySelectorAll('input')].find(x => x.getAttribute('type') === focusHint.type);
+      if (next) {
+        next.focus({ preventScroll: true });
+        try { next.setSelectionRange(focusHint.start, focusHint.end); } catch {}
+      }
+    }
+  }
+
+  const ReactDOM = {
+    createRoot(container) {
+      rootContainer = container;
+      return { render(vnode) { rootVNode = vnode; renderRoot(); } };
+    }
+  };
+
+  window.React = React;
+  window.ReactDOM = ReactDOM;
+})();
+</script><script>const { useMemo, useRef, useState } = React;
+const base = (props) => ({
+    width: 16,
+    height: 16,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.75,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    ...props,
+});
+const Camera = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M14.5 4h-5L8 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4l-1.5-2Z" }),
+    React.createElement("circle", { cx: "12", cy: "13", r: "3.5" })));
+const Wifi = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M5 12.55a11 11 0 0 1 14 0" }),
+    React.createElement("path", { d: "M8.5 16.05a6 6 0 0 1 7 0" }),
+    React.createElement("path", { d: "M2 8.82a15 15 0 0 1 20 0" }),
+    React.createElement("line", { x1: "12", y1: "20", x2: "12.01", y2: "20" })));
+const WifiOff = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M2 8.82a15 15 0 0 1 4.17-2.65" }),
+    React.createElement("path", { d: "M10.66 5c4.01-.36 8.14.9 11.34 3.76" }),
+    React.createElement("path", { d: "M16.85 11.25a10 10 0 0 1 2.22 1.68" }),
+    React.createElement("path", { d: "M5 12.55a10.94 10.94 0 0 1 5.17-2.39" }),
+    React.createElement("path", { d: "M8.53 16.11a6 6 0 0 1 6.95 0" }),
+    React.createElement("line", { x1: "12", y1: "20", x2: "12.01", y2: "20" }),
+    React.createElement("line", { x1: "2", y1: "2", x2: "22", y2: "22" })));
+const Sync = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" }),
+    React.createElement("path", { d: "M3 3v5h5" }),
+    React.createElement("path", { d: "M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" }),
+    React.createElement("path", { d: "M21 21v-5h-5" })));
+const Shield = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" })));
+const ShieldCheck = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" }),
+    React.createElement("path", { d: "m9 12 2 2 4-4" })));
+const AlertTriangle = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" }),
+    React.createElement("line", { x1: "12", y1: "9", x2: "12", y2: "13" }),
+    React.createElement("line", { x1: "12", y1: "17", x2: "12.01", y2: "17" })));
+const Thermometer = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0Z" })));
+const Droplet = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M12 2.69 17.66 8.35A8 8 0 1 1 6.34 8.35L12 2.69Z" })));
+const Radar = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M19.07 4.93A10 10 0 0 0 6.99 3.34" }),
+    React.createElement("path", { d: "M4 6h.01" }),
+    React.createElement("path", { d: "M2.29 9.62A10 10 0 1 0 21.31 8.35" }),
+    React.createElement("path", { d: "M16.24 7.76A6 6 0 1 0 8.23 16.67" }),
+    React.createElement("path", { d: "M12 18h.01" }),
+    React.createElement("path", { d: "M17.99 11.66A6 6 0 0 1 15.77 16.67" }),
+    React.createElement("circle", { cx: "12", cy: "12", r: "2" }),
+    React.createElement("path", { d: "m13.41 10.59 5.66-5.66" })));
+const User = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" }),
+    React.createElement("circle", { cx: "12", cy: "7", r: "4" })));
+const Tag = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M12.59 2.59A2 2 0 0 0 11.17 2H4a2 2 0 0 0-2 2v7.17a2 2 0 0 0 .59 1.42l8.83 8.83a2 2 0 0 0 2.83 0l7.17-7.17a2 2 0 0 0 0-2.83Z" }),
+    React.createElement("line", { x1: "7", y1: "7", x2: "7.01", y2: "7" })));
+const Database = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("ellipse", { cx: "12", cy: "5", rx: "9", ry: "3" }),
+    React.createElement("path", { d: "M3 5v14a9 3 0 0 0 18 0V5" }),
+    React.createElement("path", { d: "M3 12a9 3 0 0 0 18 0" })));
+const HardDrive = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("line", { x1: "22", y1: "12", x2: "2", y2: "12" }),
+    React.createElement("path", { d: "M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z" }),
+    React.createElement("line", { x1: "6", y1: "16", x2: "6.01", y2: "16" }),
+    React.createElement("line", { x1: "10", y1: "16", x2: "10.01", y2: "16" })));
+const Trash = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("polyline", { points: "3 6 5 6 21 6" }),
+    React.createElement("path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" })));
+const TrendUp = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("polyline", { points: "22 7 13.5 15.5 8.5 10.5 2 17" }),
+    React.createElement("polyline", { points: "16 7 22 7 22 13" })));
+const TrendDown = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("polyline", { points: "22 17 13.5 8.5 8.5 13.5 2 7" }),
+    React.createElement("polyline", { points: "16 17 22 17 22 11" })));
+const Minus = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("line", { x1: "5", y1: "12", x2: "19", y2: "12" })));
+const Search = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("circle", { cx: "11", cy: "11", r: "8" }),
+    React.createElement("line", { x1: "21", y1: "21", x2: "16.65", y2: "16.65" })));
+const Check = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("polyline", { points: "20 6 9 17 4 12" })));
+const ArrowDown = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("line", { x1: "12", y1: "5", x2: "12", y2: "19" }),
+    React.createElement("polyline", { points: "19 12 12 19 5 12" })));
+const ArrowUp = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("line", { x1: "12", y1: "19", x2: "12", y2: "5" }),
+    React.createElement("polyline", { points: "5 12 12 5 19 12" })));
+const Cpu = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("rect", { x: "4", y: "4", width: "16", height: "16", rx: "2" }),
+    React.createElement("rect", { x: "9", y: "9", width: "6", height: "6" }),
+    React.createElement("line", { x1: "9", y1: "1", x2: "9", y2: "4" }),
+    React.createElement("line", { x1: "15", y1: "1", x2: "15", y2: "4" }),
+    React.createElement("line", { x1: "9", y1: "20", x2: "9", y2: "23" }),
+    React.createElement("line", { x1: "15", y1: "20", x2: "15", y2: "23" }),
+    React.createElement("line", { x1: "20", y1: "9", x2: "23", y2: "9" }),
+    React.createElement("line", { x1: "20", y1: "14", x2: "23", y2: "14" }),
+    React.createElement("line", { x1: "1", y1: "9", x2: "4", y2: "9" }),
+    React.createElement("line", { x1: "1", y1: "14", x2: "4", y2: "14" })));
+const Fingerprint = (p) => (React.createElement("svg", { ...base(p) },
+    React.createElement("path", { d: "M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4" }),
+    React.createElement("path", { d: "M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2" }),
+    React.createElement("path", { d: "M17.29 21.02c.12-.6.43-2.3.5-3.02" }),
+    React.createElement("path", { d: "M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4" }),
+    React.createElement("path", { d: "M8.65 22c.21-.66.45-1.32.57-2" }),
+    React.createElement("path", { d: "M14 13.12c0 2.38 0 6.38-1 8.88" }),
+    React.createElement("path", { d: "M2 16h.01" }),
+    React.createElement("path", { d: "M21.8 16c.2-2 .131-5.354 0-6" }),
+    React.createElement("path", { d: "M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2" })));
+const SearchIcon = Search;
+const markers = ['BLUE', 'GREEN', 'YELLOW', 'RED', 'UNKNOWN'];
+// Deterministic pseudo-random so the demo state is stable across renders.
+function seeded(i) {
+    const x = Math.sin(i * 12.9898) * 43758.5453;
+    return x - Math.floor(x);
+}
+function pad(n) {
+    return n.toString().padStart(2, '0');
+}
+// Build a rolling buffer of 256 records, newest first, ending at 14:32:08.
+function buildRecords() {
+    const rows = [];
+    const baseSeconds = 14 * 3600 + 32 * 60 + 8; // 14:32:08
+    for (let i = 0; i < 256; i++) {
+        const t = baseSeconds - i * 2; // every ~2s
+        const hh = Math.floor(t / 3600);
+        const mm = Math.floor((t % 3600) / 60);
+        const ss = t % 60;
+        const r = seeded(i);
+        const r2 = seeded(i + 500);
+        const sensorError = i === 6 || i === 41;
+        const overall = i < 3 ? 'WARNING' : r > 0.9 ? 'WARNING' : 'SAFE';
+        const sync = i < 5 ? 'SYNCED' : i < 9 ? 'CATCHING_UP' : r2 > 0.86 ? 'PENDING' : 'SYNCED';
+        rows.push({
+            id: 4096 - i,
+            time: `${pad(hh)}:${pad(mm)}:${pad(ss)}`,
+            temp: sensorError ? null : Math.round((26.8 + r * 2.6) * 10) / 10,
+            humidity: sensorError ? null : Math.round(60 + r2 * 9),
+            ir: i === 12 ? 'OBSTACLE' : sensorError ? 'ERROR' : r > 0.82 ? 'OBSTACLE' : 'CLEAR',
+            presence: r2 > 0.35 ? 'OCCUPIED' : 'EMPTY',
+            marker: i === 4 ? 'UNKNOWN' : markers[Math.floor(r * markers.length)],
+            overall,
+            sync,
+        });
+    }
+    return rows;
+}
+const alertLog = [
+    {
+        id: 'ALRT-2048',
+        triggeredAt: '2026-08-08 14:18:52',
+        condition: 'IR obstacle + occupancy held ≥ 2s',
+        status: 'ACKNOWLEDGED',
+        acknowledgedAt: '2026-08-08 14:19:07',
+        method: 'Dashboard',
+    },
+    {
+        id: 'ALRT-2041',
+        triggeredAt: '2026-08-08 13:55:10',
+        condition: 'Temperature 41.2°C exceeded threshold',
+        status: 'ACKNOWLEDGED',
+        acknowledgedAt: '2026-08-08 13:55:24',
+        method: 'Physical push-button',
+    },
+    {
+        id: 'ALRT-2039',
+        triggeredAt: '2026-08-08 13:41:33',
+        condition: 'Occupancy during locked cycle',
+        status: 'ACKNOWLEDGED',
+        acknowledgedAt: '2026-08-08 13:41:49',
+        method: 'Dashboard',
+    },
+];
+// light SaaS status primitives
+const initialLog = alertLog;
+function Pill({ children, tone = 'neutral', className = '', }) {
+    const tones = {
+        brand: 'text-brand-strong bg-brand-soft',
+        danger: 'text-danger bg-danger-soft',
+        warn: 'text-warn bg-warn/10',
+        lime: 'text-ink bg-lime/25',
+        neutral: 'text-ink-2 bg-soft',
+    };
+    return (React.createElement("span", { className: `inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${tones[tone]} ${className}` }, children));
+}
+const dotColor = {
+    brand: 'bg-brand',
+    danger: 'bg-danger',
+    warn: 'bg-warn',
+    mute: 'bg-mute',
+};
+function StatusDot({ tone, label, }) {
+    return (React.createElement("span", { className: "inline-flex items-center gap-2 text-sm text-ink" },
+        React.createElement("span", { className: `h-2 w-2 shrink-0 rounded-full ${dotColor[tone]}` }),
+        label));
+}
+function PresenceBadge({ presence }) {
+    return presence === 'OCCUPIED' ? (React.createElement(Pill, { tone: "brand" },
+        React.createElement("span", { className: "h-1.5 w-1.5 rounded-full bg-brand" }),
+        " Occupied")) : (React.createElement(Pill, { tone: "neutral" },
+        React.createElement("span", { className: "h-1.5 w-1.5 rounded-full bg-mute" }),
+        " Empty"));
+}
+const swatch = {
+    RED: 'bg-danger',
+    BLUE: 'bg-[#3b82f6]',
+    YELLOW: 'bg-warn',
+    GREEN: 'bg-brand',
+    UNKNOWN: 'bg-mute',
+};
+function MarkerBadge({ marker }) {
+    const label = marker.charAt(0) + marker.slice(1).toLowerCase();
+    return (React.createElement(Pill, { tone: "neutral" },
+        React.createElement("span", { className: `h-2 w-2 rounded-full ${swatch[marker]}` }),
+        label));
+}
+function IrCell({ ir }) {
+    if (ir === 'CLEAR')
+        return React.createElement(StatusDot, { tone: "brand", label: "Clear" });
+    if (ir === 'OBSTACLE')
+        return React.createElement(StatusDot, { tone: "danger", label: "Obstacle" });
+    return React.createElement(StatusDot, { tone: "warn", label: "Sensor error" });
+}
+function OverallPill({ status }) {
+    const map = {
+        SAFE: { tone: 'brand', label: 'Safe' },
+        WARNING: { tone: 'warn', label: 'Warning' },
+        DANGER: { tone: 'danger', label: 'Danger' },
+    };
+    const { tone, label } = map[status];
+    return React.createElement(Pill, { tone: tone }, label);
+}
+function SyncBadge({ sync }) {
+    if (sync === 'SYNCED')
+        return React.createElement(Pill, { tone: "brand" }, "Synced");
+    if (sync === 'CATCHING_UP')
+        return React.createElement(Pill, { tone: "lime" }, "Catching up");
+    return React.createElement(Pill, { tone: "neutral" }, "Pending");
+}
+const val = (v, suffix) => v === null ? (React.createElement("span", { className: "text-danger" }, "\u2014 err")) : (React.createElement("span", { className: "text-ink" },
+    v,
+    React.createElement("span", { className: "text-ink-2" }, suffix)));
+function RecordsTable({ rows, sortDesc, onToggleSort, maxHeight = '440px', highlightNewest = false, }) {
+    return (React.createElement("div", { className: "overflow-hidden rounded-2xl border border-line" },
+        React.createElement("div", { className: "overflow-auto", style: { maxHeight } },
+            React.createElement("table", { className: "w-full min-w-[820px] border-collapse text-sm" },
+                React.createElement("thead", { className: "sticky top-0 z-10" },
+                    React.createElement("tr", { className: "bg-soft text-left text-[12px] font-medium text-ink-2" },
+                        React.createElement("th", { className: "px-5 py-3" },
+                            React.createElement("button", { onClick: onToggleSort, className: "inline-flex items-center gap-1 transition-colors hover:text-ink" },
+                                "Timestamp",
+                                sortDesc ? React.createElement(ArrowDown, { width: 12, height: 12 }) : React.createElement(ArrowUp, { width: 12, height: 12 }))),
+                        React.createElement("th", { className: "px-5 py-3" }, "Temperature"),
+                        React.createElement("th", { className: "px-5 py-3" }, "Humidity"),
+                        React.createElement("th", { className: "px-5 py-3" }, "IR Status"),
+                        React.createElement("th", { className: "px-5 py-3" }, "Presence"),
+                        React.createElement("th", { className: "px-5 py-3" }, "Color"),
+                        React.createElement("th", { className: "px-5 py-3" }, "Overall"),
+                        React.createElement("th", { className: "px-5 py-3" }, "Sync"))),
+                React.createElement("tbody", null, rows.map((r, i) => (React.createElement("tr", { key: r.id, className: `border-t border-line transition-colors hover:bg-soft/70 ${highlightNewest && i === 0 ? 'bg-brand-soft/50' : ''}` },
+                    React.createElement("td", { className: "px-5 py-3.5 tnum text-ink-2" }, r.time),
+                    React.createElement("td", { className: "px-5 py-3.5 tnum" }, val(r.temp, ' °C')),
+                    React.createElement("td", { className: "px-5 py-3.5 tnum" }, val(r.humidity, ' %')),
+                    React.createElement("td", { className: "px-5 py-3.5" },
+                        React.createElement(IrCell, { ir: r.ir })),
+                    React.createElement("td", { className: "px-5 py-3.5" },
+                        React.createElement(PresenceBadge, { presence: r.presence })),
+                    React.createElement("td", { className: "px-5 py-3.5" },
+                        React.createElement(MarkerBadge, { marker: r.marker })),
+                    React.createElement("td", { className: "px-5 py-3.5" },
+                        React.createElement(OverallPill, { status: r.overall })),
+                    React.createElement("td", { className: "px-5 py-3.5" },
+                        React.createElement(SyncBadge, { sync: r.sync }))))))))));
+}
+const CAMERA_IMG = 'https://images.unsplash.com/photo-1748002645678-7f9c04263315?w=1280&h=720&fit=crop&auto=format';
+const NAV = ['Dashboard', 'Live Monitor', 'Logs', 'Alerts'];
+/* ---------- primitives ---------- */
+function Card({ children, className = '', }) {
+    return (React.createElement("section", { className: `rounded-[20px] border border-line bg-card shadow-[0_1px_2px_rgba(38,41,39,0.04),0_8px_24px_-16px_rgba(38,41,39,0.12)] ${className}` }, children));
+}
+function CardHead({ title, icon, aside, }) {
+    return (React.createElement("div", { className: "flex items-center justify-between gap-3 px-6 pt-5" },
+        React.createElement("h2", { className: "flex items-center gap-2 text-[17px] font-semibold text-ink" },
+            icon && (React.createElement("span", { className: "flex h-8 w-8 items-center justify-center rounded-full bg-soft text-brand" }, icon)),
+            title),
+        aside));
+}
+function IconCircle({ children, tone = 'brand' }) {
+    const tones = {
+        brand: 'bg-brand-soft text-brand',
+        lime: 'bg-lime/25 text-ink',
+        danger: 'bg-danger-soft text-danger',
+        warn: 'bg-warn/12 text-warn',
+        neutral: 'bg-soft text-ink-2',
+    };
+    return (React.createElement("span", { className: `flex h-11 w-11 items-center justify-center rounded-full ${tones[tone]}` }, children));
+}
+function Heartbeat({ alive }) {
+    return (React.createElement("span", { className: "inline-flex items-center gap-1.5 text-[13px] text-ink-2" },
+        React.createElement("span", { className: `h-2 w-2 rounded-full ${alive ? 'bg-brand' : 'bg-mute'}`, style: alive ? { animation: 'livedot 1.6s ease-in-out infinite' } : undefined }),
+        alive ? 'Live' : 'Offline'));
+}
+/* ---------- app ---------- */
+function App() {
+    const [conn, setConn] = useState('LIVE');
+    const [nav, setNav] = useState('Dashboard');
+    const [alerts, setAlerts] = useState([]);
+    const [log, setLog] = useState(initialLog);
+    const seqRef = useRef(2049);
+    const ackSeqRef = useRef(20);
+    const [sortDesc, setSortDesc] = useState(true);
+    const [camDegraded, setCamDegraded] = useState(false);
+    const [query, setQuery] = useState('');
+    // section anchors for nav
+    const topRef = useRef(null);
+    const cameraRef = useRef(null);
+    const logsRef = useRef(null);
+    const alertsRef = useRef(null);
+    const navRefs = {
+        Dashboard: topRef,
+        'Live Monitor': cameraRef,
+        Logs: logsRef,
+        Alerts: alertsRef,
+    };
+    function goTo(item) {
+        setNav(item);
+        navRefs[item]?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    const allRecords = useMemo(() => buildRecords(), []);
+    const sorted = useMemo(() => (sortDesc ? allRecords : [...allRecords].reverse()), [allRecords, sortDesc]);
+    const logRows = useMemo(() => {
+        if (!query.trim())
+            return sorted;
+        const q = query.toLowerCase();
+        return sorted.filter((r) => r.time.includes(q) ||
+            r.marker.toLowerCase().includes(q) ||
+            r.ir.toLowerCase().includes(q) ||
+            r.presence.toLowerCase().includes(q));
+    }, [sorted, query]);
+    // search history
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
+    const [results, setResults] = useState(null);
+    const [searchedRange, setSearchedRange] = useState(null);
+    const cycleConn = () => setConn((c) => (c === 'LIVE' ? 'CATCHING_UP' : c === 'CATCHING_UP' ? 'OFFLINE' : 'LIVE'));
+    function triggerDanger() {
+        const id = `ALRT-${seqRef.current++}`;
+        setAlerts((a) => [
+            {
+                id,
+                triggeredAt: '2026-08-08 14:32:' + String(10 + a.length * 3).padStart(2, '0'),
+                condition: a.length % 2 === 0
+                    ? 'Obstacle detected while presence is active'
+                    : 'Temperature spike 42.6°C sustained ≥ 2s',
+                status: 'PENDING',
+                acknowledgedAt: null,
+                method: null,
+            },
+            ...a,
+        ]);
+    }
+    function acknowledge(id, method) {
+        setAlerts((a) => {
+            const target = a.find((x) => x.id === id);
+            if (!target)
+                return a;
+            const ackAt = '2026-08-08 14:32:' + String(ackSeqRef.current++).padStart(2, '0');
+            // move to log only if not already recorded (idempotent against double calls)
+            setLog((l) => l.some((x) => x.id === id)
+                ? l
+                : [{ ...target, status: 'ACKNOWLEDGED', acknowledgedAt: ackAt, method }, ...l]);
+            return a.filter((x) => x.id !== id);
+        });
+    }
+    function runSearch() {
+        const s = start ? start.slice(11) : '00:00';
+        const e = end ? end.slice(11) : '23:59';
+        setResults(allRecords.filter((r) => r.time.slice(0, 5) >= s && r.time.slice(0, 5) <= e));
+        setSearchedRange(`${s} → ${e}`);
+    }
+    function last2min() {
+        setStart('2026-08-08T14:30');
+        setEnd('2026-08-08T14:32');
+        setResults(allRecords.filter((r) => r.time >= '14:30:00' && r.time <= '14:32:59'));
+        setSearchedRange('14:30 → 14:32 · Last 2 minutes');
+    }
+    function clearSearch() {
+        setStart('');
+        setEnd('');
+        setResults(null);
+        setSearchedRange(null);
+    }
+    const alive = conn !== 'OFFLINE';
+    const connCfg = {
+        LIVE: { label: 'Live', tone: 'brand', Icon: Wifi },
+        OFFLINE: { label: 'Offline', tone: 'neutral', Icon: WifiOff },
+        CATCHING_UP: { label: 'Catching Up', tone: 'lime', Icon: Sync },
+    }[conn];
+    return (React.createElement("div", { className: "min-h-screen bg-page text-ink" },
+        React.createElement("header", { className: "sticky top-0 z-30 border-b border-line bg-page/85 backdrop-blur-md" },
+            React.createElement("div", { className: "mx-auto flex h-[72px] max-w-[1440px] items-center justify-between gap-4 px-6 lg:px-8" },
+                React.createElement("div", { className: "flex items-center gap-2.5" },
+                    React.createElement("div", { className: "flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-white" },
+                        React.createElement(Camera, { width: 18, height: 18 })),
+                    React.createElement("span", { className: "text-[16px] font-semibold tracking-tight" }, "RoboFusion Monitor")),
+                React.createElement("nav", { className: "hidden items-center gap-1 rounded-full border border-line bg-card p-1 md:flex" }, NAV.map((item) => (React.createElement("button", { key: item, onClick: () => goTo(item), className: `rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${nav === item ? 'bg-ink text-white' : 'text-ink-2 hover:text-ink'}` }, item)))),
+                React.createElement("div", { className: "flex items-center gap-2" },
+                    React.createElement("button", { onClick: cycleConn, title: "Cycle connection (demo)", className: "inline-flex items-center gap-2 rounded-full border border-line bg-card px-3 py-1.5" },
+                        React.createElement(Pill, { tone: connCfg.tone },
+                            React.createElement(connCfg.Icon, { width: 13, height: 13, className: conn === 'CATCHING_UP' ? 'animate-spin' : '' }),
+                            connCfg.label)),
+                    React.createElement("button", { className: "flex h-9 w-9 items-center justify-center rounded-full border border-line bg-card text-ink-2 transition-colors hover:text-ink" },
+                        React.createElement(Cpu, { width: 17, height: 17 })),
+                    React.createElement("button", { className: "relative flex h-9 w-9 items-center justify-center rounded-full border border-line bg-card text-ink-2 transition-colors hover:text-ink" },
+                        React.createElement(AlertTriangle, { width: 16, height: 16 }),
+                        alerts.length > 0 && (React.createElement("span", { className: "absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-danger" })))))),
+        React.createElement("main", { className: "mx-auto max-w-[1440px] space-y-5 px-6 py-7 lg:px-8" },
+            React.createElement("div", { ref: topRef, className: "flex flex-wrap items-end justify-between gap-3", style: { scrollMarginTop: '90px' } },
+                React.createElement("div", null,
+                    React.createElement("h1", { className: "text-[30px] font-semibold tracking-tight text-ink" }, "Welcome to RoboFusion Monitor"),
+                    React.createElement("p", { className: "mt-1 text-[14px] text-ink-2" }, "Real-time safety monitoring served from the ESP32-S3-CAM device.")),
+                React.createElement("div", { className: "flex items-center gap-4 text-[13px] text-ink-2" },
+                    React.createElement(Heartbeat, { alive: alive }),
+                    React.createElement("span", { className: "tnum" }, "Last update 14:32:08"))),
+            React.createElement("section", { "aria-live": "assertive" }, alerts.length === 0 ? (React.createElement(Card, { className: "flex flex-wrap items-center justify-between gap-3 px-6 py-4" },
+                React.createElement("span", { className: "flex items-center gap-2.5 text-sm" },
+                    React.createElement(IconCircle, { tone: "brand" },
+                        React.createElement(ShieldCheck, { width: 18, height: 18 })),
+                    React.createElement("span", null,
+                        React.createElement("span", { className: "font-medium text-ink" }, "No active alerts"),
+                        React.createElement("span", { className: "ml-2 text-ink-2" }, "All danger conditions clear."))),
+                React.createElement("button", { onClick: triggerDanger, className: "rounded-full border border-line px-3 py-1.5 text-xs text-ink-2 transition-colors hover:border-danger/40 hover:text-danger" }, "Simulate alert (demo)"))) : (React.createElement("div", { className: "space-y-3" }, alerts.map((a) => (React.createElement("div", { key: a.id, className: "flex flex-col gap-4 rounded-[20px] border border-danger/25 bg-danger-soft px-6 py-4 sm:flex-row sm:items-center sm:justify-between" },
+                React.createElement("div", { className: "flex items-start gap-3" },
+                    React.createElement(IconCircle, { tone: "danger" },
+                        React.createElement(AlertTriangle, { width: 19, height: 19 })),
+                    React.createElement("div", null,
+                        React.createElement("div", { className: "flex flex-wrap items-center gap-2" },
+                            React.createElement("h3", { className: "text-[15px] font-semibold text-ink" }, "Safety Alert"),
+                            React.createElement("span", { className: "tnum text-xs text-danger" }, a.id),
+                            React.createElement(Pill, { tone: "danger" }, "Pending")),
+                        React.createElement("p", { className: "mt-0.5 text-sm text-ink" },
+                            a.condition,
+                            "."),
+                        React.createElement("p", { className: "mt-0.5 tnum text-xs text-ink-2" },
+                            "Triggered ",
+                            a.triggeredAt))),
+                React.createElement("div", { className: "flex shrink-0 items-center gap-2" },
+                    React.createElement("button", { onClick: () => acknowledge(a.id, 'Physical push-button'), className: "inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-line bg-card px-3.5 text-sm text-ink-2 transition-colors hover:text-ink" },
+                        React.createElement(Fingerprint, { width: 15, height: 15 }),
+                        " Push-button"),
+                    React.createElement("button", { onClick: () => acknowledge(a.id, 'Dashboard'), className: "inline-flex min-h-[40px] items-center gap-1.5 rounded-full bg-danger px-4 text-sm font-semibold text-white transition-colors hover:brightness-105" },
+                        React.createElement(Check, { width: 16, height: 16 }),
+                        " Acknowledge")))))))),
+            React.createElement("div", { ref: cameraRef, className: "grid grid-cols-1 gap-5 lg:grid-cols-12", style: { scrollMarginTop: '90px' } },
+                React.createElement(Card, { className: "lg:col-span-8" },
+                    React.createElement(CardHead, { title: "Live Camera", icon: React.createElement(Camera, { width: 16, height: 16 }), aside: React.createElement("div", { className: "flex items-center gap-3" },
+                            React.createElement("span", { className: "inline-flex items-center gap-1.5 text-[13px] text-ink-2" },
+                                React.createElement("span", { className: "h-2 w-2 rounded-full bg-danger", style: { animation: 'livedot 1.4s ease-in-out infinite' } }),
+                                "Live \u00B7 14:32:08"),
+                            React.createElement("button", { onClick: () => setCamDegraded((v) => !v), className: "text-[13px] text-ink-2 transition-colors hover:text-ink" }, camDegraded ? 'Restore' : 'Drop frame')) }),
+                    React.createElement("div", { className: "p-6 pt-4" },
+                        React.createElement("div", { className: "relative aspect-video overflow-hidden rounded-2xl border border-line bg-soft" },
+                            React.createElement("img", { src: CAMERA_IMG, alt: "Live view of the RoboFusion industrial monitoring bay", className: `h-full w-full object-cover ${camDegraded ? 'brightness-95 saturate-[0.9]' : ''}` }),
+                            React.createElement("div", { className: "absolute left-4 top-4 flex flex-wrap items-center gap-2" },
+                                React.createElement("span", { className: "rounded-full bg-card/90 p-0.5 pr-0.5 shadow-sm backdrop-blur" },
+                                    React.createElement(PresenceBadge, { presence: "OCCUPIED" })),
+                                React.createElement("span", { className: "rounded-full bg-card/90 p-0.5 shadow-sm backdrop-blur" },
+                                    React.createElement(MarkerBadge, { marker: "BLUE" }))),
+                            camDegraded && (React.createElement("div", { className: "absolute inset-x-0 bottom-0 flex items-center gap-2 bg-ink/70 px-4 py-2.5 text-xs text-white backdrop-blur-sm" },
+                                React.createElement(AlertTriangle, { width: 14, height: 14 }),
+                                "Showing last good frame \u00B7 New frame unavailable"))))),
+                React.createElement("div", { className: "space-y-5 lg:col-span-4" },
+                    React.createElement(Card, { className: "p-6" },
+                        React.createElement("div", { className: "flex items-center justify-between" },
+                            React.createElement("h2", { className: "text-[16px] font-semibold text-ink" }, "Safety Score"),
+                            React.createElement(Pill, { tone: "brand" },
+                                React.createElement(ShieldCheck, { width: 13, height: 13 }),
+                                " Safe")),
+                        React.createElement("div", { className: "mt-3 flex items-end gap-1.5" },
+                            React.createElement("span", { className: "text-[42px] font-semibold leading-none tnum text-ink" }, "87"),
+                            React.createElement("span", { className: "pb-1 text-[15px] text-ink-2" }, "/ 100")),
+                        React.createElement("div", { className: "mt-4 flex gap-1.5" }, Array.from({ length: 20 }).map((_, i) => (React.createElement("span", { key: i, className: `h-2 flex-1 rounded-full ${i < 17 ? 'bg-brand' : 'bg-line'}` })))),
+                        React.createElement("p", { className: "mt-3 text-[13px] text-ink-2" }, "Latches only after the condition stays stable for ~1\u20132s.")),
+                    React.createElement(Card, { className: "p-6" },
+                        React.createElement("div", { className: "flex items-center justify-between" },
+                            React.createElement("span", { className: "text-[13px] font-medium text-ink-2" }, "Overall Status"),
+                            React.createElement(OverallPill, { status: "WARNING" })),
+                        React.createElement("div", { className: "mt-2 flex items-center gap-2.5" },
+                            React.createElement(IconCircle, { tone: "warn" },
+                                React.createElement(AlertTriangle, { width: 19, height: 19 })),
+                            React.createElement("div", null,
+                                React.createElement("div", { className: "text-[22px] font-semibold text-ink" }, "Warning"),
+                                React.createElement("div", { className: "text-[12px] text-ink-2" }, "Held ~1.2s before latching"))),
+                        React.createElement("div", { className: "my-4 h-px bg-line" }),
+                        React.createElement("div", { className: "flex items-center justify-between" },
+                            React.createElement("span", { className: "text-[13px] font-medium text-ink-2" }, "Early-Warning Trend"),
+                            React.createElement(Pill, { tone: "lime" }, "Rising")),
+                        React.createElement("p", { className: "mt-1.5 text-[12px] text-ink-2" }, "Trend only \u00B7 does not activate alarm")))),
+            React.createElement("div", { className: "grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4" },
+                React.createElement(Metric, { icon: React.createElement(Thermometer, { width: 18, height: 18 }), label: "Temperature", value: "28.4", unit: "\u00B0C", sub: "DHT11 sensor \u00B7 every 5s" }),
+                React.createElement(Metric, { icon: React.createElement(Droplet, { width: 18, height: 18 }), label: "Humidity", value: "65", unit: "%", sub: "DHT11 sensor \u00B7 every 5s" }),
+                React.createElement(Card, { className: "p-5" },
+                    React.createElement("div", { className: "flex items-start justify-between" },
+                        React.createElement(IconCircle, { tone: "brand" },
+                            React.createElement(Radar, { width: 18, height: 18 })),
+                        React.createElement(Pill, { tone: "brand" }, "Clear")),
+                    React.createElement("div", { className: "mt-4 text-[13px] font-medium text-ink-2" }, "IR Obstacle"),
+                    React.createElement("div", { className: "mt-0.5 text-[26px] font-semibold text-ink" }, "No obstacle"),
+                    React.createElement("p", { className: "mt-1 text-[12px] text-ink-2" }, "Updated ~1s ago \u00B7 every 1s")),
+                React.createElement(Card, { className: "p-5" },
+                    React.createElement("div", { className: "flex items-start justify-between" },
+                        React.createElement(IconCircle, { tone: "lime" },
+                            React.createElement(Tag, { width: 18, height: 18 })),
+                        React.createElement("span", { className: "h-6 w-6 rounded-full bg-[#3b82f6] ring-2 ring-card" })),
+                    React.createElement("div", { className: "mt-4 text-[13px] font-medium text-ink-2" }, "Color Marker"),
+                    React.createElement("div", { className: "mt-0.5 text-[26px] font-semibold text-ink" }, "Blue"),
+                    React.createElement("div", { className: "mt-2 flex items-center gap-1.5" },
+                        [
+                            ['Red', 'bg-danger'],
+                            ['Blue', 'bg-[#3b82f6]'],
+                            ['Yellow', 'bg-warn'],
+                            ['Green', 'bg-brand'],
+                        ].map(([name, c]) => (React.createElement("span", { key: name, title: name, className: `h-3 w-3 rounded-full ${c}` }))),
+                        React.createElement("span", { className: "ml-1 text-[12px] text-ink-2" }, "recognized set")))),
+            React.createElement("div", { className: "grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4" },
+                React.createElement(Ops, { icon: React.createElement(Database, { width: 16, height: 16 }), title: "Rolling Memory", value: "256 / 256", pct: 100, tone: "brand", note: "Oldest in-memory record replaced when a new one arrives." }),
+                React.createElement(Ops, { icon: React.createElement(HardDrive, { width: 16, height: 16 }), title: "Permanent Storage", value: "142 / 160 KB", pct: 89, tone: "warn", note: "Nearing configured storage limit." }),
+                React.createElement(Ops, { icon: React.createElement(Trash, { width: 16, height: 16 }), title: "Cleared Data", value: "1,248", note: "Records cleared to maintain limit." }),
+                React.createElement(Ops, { icon: React.createElement(Sync, { width: 16, height: 16 }), title: "Synchronization", value: "38 / 84", pct: 45, tone: "brand", note: "Sent in original order \u00B7 no duplicates \u00B7 46 pending." })),
+            React.createElement("div", { ref: logsRef, style: { scrollMarginTop: '90px' } }),
+            React.createElement(Card, null,
+                React.createElement(CardHead, { title: "Live Data Log", icon: React.createElement(Cpu, { width: 16, height: 16 }), aside: React.createElement("div", { className: "flex items-center gap-2" },
+                        React.createElement("div", { className: "relative" },
+                            React.createElement(SearchIcon, { width: 15, height: 15, className: "pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-2" }),
+                            React.createElement("input", { value: query, onChange: (e) => setQuery(e.target.value), placeholder: "Search log\u2026", className: "input pl-8" })),
+                        React.createElement(Pill, { tone: "neutral" }, "256-record buffer")) }),
+                React.createElement("div", { className: "p-6 pt-4" },
+                    React.createElement(RecordsTable, { rows: logRows, sortDesc: sortDesc, onToggleSort: () => setSortDesc((v) => !v), highlightNewest: sortDesc && !query }),
+                    React.createElement("p", { className: "mt-2.5 text-[12px] text-ink-2" },
+                        "Showing ",
+                        logRows.length,
+                        " records \u00B7 captured ~every 2s \u00B7 sorted",
+                        ' ',
+                        sortDesc ? 'newest first' : 'oldest first'))),
+            React.createElement(Card, null,
+                React.createElement(CardHead, { title: "Saved History", icon: React.createElement(SearchIcon, { width: 16, height: 16 }) }),
+                React.createElement("div", { className: "p-6 pt-4" },
+                    React.createElement("div", { className: "flex flex-wrap items-end gap-3" },
+                        React.createElement(Field, { label: "Start (date & time)" },
+                            React.createElement("input", { type: "datetime-local", value: start, onChange: (e) => setStart(e.target.value), className: "input" })),
+                        React.createElement(Field, { label: "End (date & time)" },
+                            React.createElement("input", { type: "datetime-local", value: end, onChange: (e) => setEnd(e.target.value), className: "input" })),
+                        React.createElement("button", { onClick: runSearch, className: "inline-flex min-h-[42px] items-center gap-1.5 rounded-full bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-strong" },
+                            React.createElement(SearchIcon, { width: 15, height: 15 }),
+                            " Search"),
+                        React.createElement("button", { onClick: last2min, className: "min-h-[42px] rounded-full border border-line bg-card px-4 text-sm text-ink-2 transition-colors hover:text-ink" }, "Last 2 minutes"),
+                        React.createElement("button", { onClick: clearSearch, className: "min-h-[42px] rounded-full px-4 text-sm text-ink-2 transition-colors hover:text-ink" }, "Clear")),
+                    results !== null && (React.createElement("div", { className: "mt-5" },
+                        React.createElement("div", { className: "mb-2.5 flex flex-wrap items-center gap-2 text-[13px] text-ink-2" },
+                            React.createElement(Pill, { tone: "brand" },
+                                results.length,
+                                " results"),
+                            React.createElement("span", { className: "tnum" },
+                                "Range ",
+                                searchedRange)),
+                        results.length === 0 ? (React.createElement("div", { className: "flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-dashed border-line py-16 text-center" },
+                            React.createElement(IconCircle, { tone: "neutral" },
+                                React.createElement(SearchIcon, { width: 18, height: 18 })),
+                            React.createElement("p", { className: "mt-1 text-sm font-medium text-ink" }, "Nothing found for this time range."),
+                            React.createElement("p", { className: "text-[13px] text-ink-2" }, "Try widening the range or use \u201CLast 2 minutes\u201D."))) : (React.createElement(RecordsTable, { rows: results, sortDesc: true, onToggleSort: () => { }, maxHeight: "360px" })))))),
+            React.createElement("div", { ref: alertsRef, style: { scrollMarginTop: '90px' } }),
+            React.createElement(Card, null,
+                React.createElement(CardHead, { title: "Alert Acknowledgement Log", icon: React.createElement(AlertTriangle, { width: 16, height: 16 }) }),
+                React.createElement("div", { className: "p-6 pt-4" },
+                    React.createElement("div", { className: "overflow-hidden rounded-2xl border border-line" },
+                        React.createElement("div", { className: "overflow-auto" },
+                            React.createElement("table", { className: "w-full min-w-[820px] border-collapse text-sm" },
+                                React.createElement("thead", null,
+                                    React.createElement("tr", { className: "bg-soft text-left text-[12px] font-medium text-ink-2" },
+                                        React.createElement("th", { className: "px-5 py-3" }, "Alert ID"),
+                                        React.createElement("th", { className: "px-5 py-3" }, "Danger triggered at"),
+                                        React.createElement("th", { className: "px-5 py-3" }, "Triggering condition"),
+                                        React.createElement("th", { className: "px-5 py-3" }, "Status"),
+                                        React.createElement("th", { className: "px-5 py-3" }, "Acknowledged at"),
+                                        React.createElement("th", { className: "px-5 py-3" }, "Method"))),
+                                React.createElement("tbody", null, [...alerts, ...log].map((a) => (React.createElement("tr", { key: a.id, className: "border-t border-line hover:bg-soft/70" },
+                                    React.createElement("td", { className: "px-5 py-3.5 tnum font-medium text-brand-strong" }, a.id),
+                                    React.createElement("td", { className: "px-5 py-3.5 tnum text-ink-2" }, a.triggeredAt),
+                                    React.createElement("td", { className: "px-5 py-3.5 text-ink" }, a.condition),
+                                    React.createElement("td", { className: "px-5 py-3.5" }, a.status === 'ACKNOWLEDGED' ? (React.createElement(Pill, { tone: "brand" },
+                                        React.createElement(Check, { width: 12, height: 12 }),
+                                        " Acknowledged")) : (React.createElement(Pill, { tone: "warn" }, "Awaiting"))),
+                                    React.createElement("td", { className: "px-5 py-3.5 tnum text-ink-2" }, a.acknowledgedAt ?? '—'),
+                                    React.createElement("td", { className: "px-5 py-3.5" }, a.method ? (React.createElement(Pill, { tone: a.method === 'Dashboard' ? 'lime' : 'neutral' },
+                                        a.method === 'Physical push-button' && React.createElement(Fingerprint, { width: 12, height: 12 }),
+                                        a.method)) : (React.createElement("span", { className: "text-ink-2" }, "\u2014")))))))))),
+                    React.createElement("p", { className: "mt-2.5 text-[12px] text-ink-2" }, "Each alert is tracked by unique ID \u2014 acknowledging one never affects another. No global \u201Cacknowledge all\u201D."))),
+            React.createElement("footer", { className: "pb-10 pt-2 text-center text-[12px] text-ink-2" }, "RoboFusion Monitor \u00B7 served from ESP32-S3-CAM \u00B7 lightweight HTML / CSS / JS build")),
+        React.createElement("style", null, `
+        .input {
+          background: var(--color-card);
+          border: 1px solid var(--color-line);
+          border-radius: 999px;
+          padding: 9px 14px;
+          font-size: 13px;
+          color: var(--color-ink);
+          min-height: 42px;
+          color-scheme: light;
+        }
+        .input::placeholder { color: var(--color-ink-2); }
+        .input:focus { outline: none; border-color: var(--color-brand); box-shadow: 0 0 0 3px rgba(21,150,95,.14); }
+      `)));
+}
+/* ---------- helpers ---------- */
+function Metric({ icon, label, value, unit, sub, }) {
+    return (React.createElement(Card, { className: "p-5" },
+        React.createElement("div", { className: "flex items-start justify-between" },
+            React.createElement(IconCircle, { tone: "brand" }, icon)),
+        React.createElement("div", { className: "mt-4 text-[13px] font-medium text-ink-2" }, label),
+        React.createElement("div", { className: "mt-0.5 flex items-baseline gap-1" },
+            React.createElement("span", { className: "text-[40px] font-semibold leading-none tnum text-ink" }, value),
+            React.createElement("span", { className: "text-[18px] text-ink-2" }, unit)),
+        React.createElement("p", { className: "mt-2 text-[12px] text-ink-2" }, sub)));
+}
+function Ops({ icon, title, value, pct, tone = 'brand', note, }) {
+    return (React.createElement(Card, { className: "flex flex-col gap-2 p-5" },
+        React.createElement("div", { className: "flex items-center gap-2 text-[13px] font-medium text-ink-2" },
+            React.createElement("span", { className: "flex h-7 w-7 items-center justify-center rounded-full bg-soft text-ink-2" }, icon),
+            title),
+        React.createElement("div", { className: "text-[24px] font-semibold tnum text-ink" }, value),
+        pct !== undefined ? (React.createElement("div", { className: "h-2 w-full overflow-hidden rounded-full bg-soft" },
+            React.createElement("div", { className: `h-full rounded-full ${tone === 'warn' ? 'bg-warn' : 'bg-brand'}`, style: { width: `${pct}%` } }))) : (React.createElement("div", { className: "h-2" })),
+        React.createElement("p", { className: "text-[12px] text-ink-2" }, note)));
+}
+function Field({ label, children }) {
+    return (React.createElement("label", { className: "flex flex-col gap-1.5" },
+        React.createElement("span", { className: "text-[12px] font-medium text-ink-2" }, label),
+        children));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(React.StrictMode, null,
+    React.createElement(App, null)));
+</script></body></html>

@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --color-page: #f4f6f2;
+  --color-card: #ffffff;
+  --color-soft: #f7f8f5;
+  --color-ink: #262927;
+  --color-ink-2: #7b817d;
+  --color-line: #e8ebe6;
+  --color-brand: #15965f;
+  --color-brand-strong: #0d8a54;
+  --color-brand-soft: #e9f7ef;
+  --color-lime: #c4db55;
+  --color-danger: #e95757;
+  --color-danger-soft: #fdeeee;
+  --color-warn: #e9a23b;
+  --color-mute: #a8aeaa;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: #f4f6f2;
+  color: #262927;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  cursor: pointer;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+.input {
+  min-height: 42px;
+  border: 1px solid #e8ebe6;
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 9px 14px;
+  color: #262927;
+  color-scheme: light;
+  font-size: 13px;
+}
+
+.input::placeholder {
+  color: #7b817d;
+}
+
+.input:focus {
+  border-color: #15965f;
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(21 150 95 / 14%);
+}
+
+::selection {
+  background: rgb(21 150 95 / 16%);
+  color: #262927;
+}
+
+* {
+  scrollbar-color: transparent transparent;
+  scrollbar-width: thin;
+}
+
+*:hover::-webkit-scrollbar-thumb,
+*:focus-within::-webkit-scrollbar-thumb {
+  background: #e8ebe6;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes live-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-live-dot {
+  animation: live-dot 1.5s ease-in-out infinite;
 }
