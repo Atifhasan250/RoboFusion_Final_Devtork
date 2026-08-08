@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { getDeviceRecords, getDeviceState } from "@/lib/api-client";
+import {
+  getDeviceRecords,
+  getDeviceState,
+  getLatestTelemetry,
+} from "@/lib/api-client";
 import type { DeviceState, TelemetryEvent } from "@/types/telemetry";
 
 export type RoboFusionData = {
@@ -23,11 +27,17 @@ export function useRoboFusionData(deviceId: string): RoboFusionData {
     if (!deviceId) return;
     try {
       const [stateResult, recordsResult] = await Promise.all([
-        getDeviceState(deviceId),
-        getDeviceRecords(deviceId),
+        getDeviceState(deviceId).catch(() => null),
+        getDeviceRecords(deviceId).catch(() => null),
       ]);
-      setState(stateResult.state);
-      setRecords(recordsResult.items);
+      if (stateResult) {
+        setState(stateResult.state);
+      } else {
+        const latest = await getLatestTelemetry(deviceId);
+        if (!latest.item) throw new Error("No device state is available");
+        setState(latest.item);
+      }
+      if (recordsResult) setRecords(recordsResult.items);
       setError(null);
     } catch (requestError) {
       setError(
