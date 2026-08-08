@@ -1,0 +1,8 @@
+<!doctype html><html><head><meta charset="utf-8"><title>RoboFusion Implementation Notes</title>
+<style>body{font-family:system-ui;max-width:900px;margin:40px auto;padding:0 20px;line-height:1.5}code{background:#eee;padding:2px 5px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:8px;text-align:left}</style></head><body>
+<h1>RoboFusion Implementation Notes</h1>
+<p><b>Status:</b> Genesis ready; code not yet inspected.</p>
+<h2>Ownership</h2><table><tr><th>Area</th><th>Owner</th></tr><tr><td>ESP32 firmware/hardware</td><td>Hardware teammate</td></tr><tr><td>Visual UI design</td><td>Frontend teammate</td></tr><tr><td>Next.js backend, DB, integration contracts/tests</td><td>Software/Codex track</td></tr></table>
+<h2>Locked decisions</h2><ul><li>Device authoritative for physical/offline behavior.</li><li>Mongo is mirror/search, not Stage 8 device storage.</li><li>Stable eventId + seq for exactly-once catch-up.</li><li>alertId-scoped first-wins acknowledgement.</li><li>1-second polling; no WebSocket unless already present.</li></ul>
+<h2>Known integration risks</h2><ul><li>Stage 4 requires a dashboard hosted directly by ESP32.</li><li>Hardware must provide stable eventId/seq and unique alertId.</li><li>Stage 11 exact thresholds must be agreed and documented.</li></ul>
+</body></html>

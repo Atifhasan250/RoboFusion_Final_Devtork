@@ -1,0 +1,51 @@
+{
+  "project": "RoboFusion Grand Finale — Software Track",
+  "nodes": [
+    "ESP32 firmware (external/hardware-owned)",
+    "device-client",
+    "telemetry-ingest-route",
+    "latest-state-route",
+    "history-route",
+    "alert-ack-route",
+    "domain-schemas",
+    "mongodb",
+    "frontend-data-seam",
+    "dashboard-ui (external/frontend-owned)"
+  ],
+  "edges": [
+    ["ESP32 firmware (external/hardware-owned)", "device-client"],
+    ["domain-schemas", "telemetry-ingest-route"],
+    ["domain-schemas", "history-route"],
+    ["domain-schemas", "alert-ack-route"],
+    ["telemetry-ingest-route", "mongodb"],
+    ["mongodb", "latest-state-route"],
+    ["mongodb", "history-route"],
+    ["device-client", "alert-ack-route"],
+    ["latest-state-route", "frontend-data-seam"],
+    ["history-route", "frontend-data-seam"],
+    ["alert-ack-route", "frontend-data-seam"],
+    ["frontend-data-seam", "dashboard-ui (external/frontend-owned)"]
+  ],
+  "invariants": {
+    "device_authority": "Next.js must never invent authoritative sensor, marker, alarm, physical-ack, rolling-buffer, on-device-storage, or power-recovery results.",
+    "stage4_hosting": "A Next.js-hosted page alone does not satisfy the device-hosted Stage 4 requirement; firmware must serve a judge-safe fallback page.",
+    "idempotency": "eventId is unique. Re-sending the same offline batch cannot create duplicate history rows.",
+    "ordering": "Catch-up records preserve original seq order; API responses/history must not silently reorder them.",
+    "history_index": "Time-range search is indexed by deviceId + occurredAt.",
+    "ack_scope": "Acknowledgement is scoped to alertId and first-wins; one alert can never acknowledge another.",
+    "scope": "No ESP32 firmware implementation and no visual redesign in the software track."
+  },
+  "freeze_boundary": [
+    "src/app/api/**",
+    "src/lib/**",
+    "src/server/**",
+    "src/models/**",
+    "src/types/**",
+    "src/hooks/**",
+    "tests/**",
+    "__tests__/**",
+    "scripts/**",
+    ".env.example",
+    "package.json"
+  ]
+}
