@@ -6,7 +6,7 @@ Stage 8 device storage or that Next.js is the Stage 4 device-hosted page.
 ## Before the demo
 
 - Set `MONGODB_URI`, `MONGODB_DB`, `DEVICE_BASE_URL`, and
-  `NEXT_PUBLIC_DEVICE_CAMERA_URL`.
+  `NEXT_PUBLIC_DEVICE_CAMERA_URL` plus `NEXT_PUBLIC_DEVICE_ID`.
 - Set `DEVICE_ADAPTER=real`; use `mock` only while the ESP32 is unavailable.
 - Confirm the ESP32 exposes the four endpoints in `HARDWARE-HANDOFF.md`.
 - Run `bun run typecheck`, `bun run lint`, and `bun run test -- --run`.
@@ -25,7 +25,8 @@ Stage 8 device storage or that Next.js is the Stage 4 device-hosted page.
    successful frame in the frontend component.
 5. Trigger one Danger episode. Send two dashboard ACK requests while pressing
    the physical button; confirm the device accepts exactly one and Mongo has one
-   document for that `alertId`.
+   document for that `alertId`. Confirm `GET /api/alerts` and the dashboard log
+   show the winning method, including a physical-button winner.
 6. Trigger another Danger episode and confirm it has a new `alertId` and remains
    independent.
 7. Disconnect WiFi for about three minutes, reconnect, and confirm queued events

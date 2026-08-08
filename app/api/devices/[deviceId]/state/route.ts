@@ -1,6 +1,11 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 
+import {
+  mirrorDeviceAcknowledgement,
+  type AlertAcknowledgementDocument,
+} from "@/lib/alerts";
 import { getDeviceAdapter } from "@/lib/device-client";
+import { COLLECTIONS, getDatabase } from "@/lib/mongodb";
 
 export async function GET(
   _request: Request,
@@ -18,6 +23,30 @@ export async function GET(
         { error: "Connected deviceId does not match the requested device" },
         { status: 502 },
       );
+    }
+    if (
+      state.alert?.state === "ACKNOWLEDGED" &&
+      state.alert.acknowledgedBy &&
+      state.alert.acknowledgedAt
+    ) {
+      const acknowledgedAlert = {
+        ...state.alert,
+        state: "ACKNOWLEDGED" as const,
+        acknowledgedBy: state.alert.acknowledgedBy,
+        acknowledgedAt: state.alert.acknowledgedAt,
+      };
+      after(async () => {
+        try {
+          const db = await getDatabase();
+          await mirrorDeviceAcknowledgement(
+            db.collection<AlertAcknowledgementDocument>(COLLECTIONS.alerts),
+            deviceId,
+            acknowledgedAlert,
+          );
+        } catch (error) {
+          console.error("Acknowledgement mirror failed", error);
+        }
+      });
     }
     return NextResponse.json({ state });
   } catch (error) {

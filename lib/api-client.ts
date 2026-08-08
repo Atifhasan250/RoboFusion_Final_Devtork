@@ -1,4 +1,7 @@
-import type { AcknowledgementResult } from "@/types/alerts";
+import type {
+  AcknowledgementLogItem,
+  AcknowledgementResult,
+} from "@/types/alerts";
 import type { DeviceState, TelemetryEvent } from "@/types/telemetry";
 
 async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
@@ -42,6 +45,12 @@ export function acknowledgeAlert(alertId: string, requestId: string) {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ requestId, source: "dashboard" }),
     },
+  );
+}
+
+export function getAcknowledgements(limit = 100) {
+  return getJson<{ items: AcknowledgementLogItem[]; count: number }>(
+    `/api/alerts?limit=${limit}`,
   );
 }
 

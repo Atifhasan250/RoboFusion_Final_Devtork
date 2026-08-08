@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   acknowledgeDeviceAlert,
+  listAcknowledgements,
+  mirrorDeviceAcknowledgement,
   type AlertAcknowledgementDocument,
 } from "@/lib/alerts";
 import type { AcknowledgementRequest } from "@/types/alerts";
@@ -44,7 +46,7 @@ function alertCollection() {
         filter: { alertId: string; winningRequestId?: { $exists: boolean } },
         update: {
           $setOnInsert?: AlertAcknowledgementDocument;
-          $set?: { winningRequestId: string };
+          $set?: { winningRequestId?: string; deviceId?: string };
         },
       ) {
         let row = rows.get(filter.alertId);
@@ -107,5 +109,65 @@ describe("alert acknowledgement", () => {
     await expect(
       acknowledgeDeviceAlert(device, collection, "alert-race", request("winner")),
     ).resolves.toMatchObject({ alertId: "alert-race", accepted: true });
+  });
+
+  it("persists a physical acknowledgement reported by device state", async () => {
+    const { collection, rows } = alertCollection();
+
+    await mirrorDeviceAcknowledgement(collection, "device-1", {
+      alertId: "physical-1",
+      state: "ACKNOWLEDGED",
+      acknowledgedBy: "physical",
+      acknowledgedAt: "2026-08-08T06:10:00.000Z",
+    });
+    await mirrorDeviceAcknowledgement(collection, "device-1", {
+      alertId: "physical-1",
+      state: "ACKNOWLEDGED",
+      acknowledgedBy: "physical",
+      acknowledgedAt: "2026-08-08T06:10:00.000Z",
+    });
+
+    expect(rows).toHaveLength(1);
+    expect(rows.get("physical-1")).toMatchObject({
+      deviceId: "device-1",
+      acknowledgedBy: "physical",
+    });
+  });
+
+  it("serializes the persisted acknowledgement log newest first", async () => {
+    const documents: AlertAcknowledgementDocument[] = [
+      {
+        alertId: "physical-2",
+        deviceId: "device-1",
+        state: "ACKNOWLEDGED",
+        acknowledgedBy: "physical",
+        acknowledgedAt: new Date("2026-08-08T06:11:00.000Z"),
+      },
+    ];
+    const collection = {
+      find() {
+        return {
+          sort() {
+            return this;
+          },
+          limit() {
+            return this;
+          },
+          async toArray() {
+            return documents;
+          },
+        };
+      },
+    } as unknown as Collection<AlertAcknowledgementDocument>;
+
+    await expect(listAcknowledgements(collection)).resolves.toEqual([
+      {
+        alertId: "physical-2",
+        deviceId: "device-1",
+        state: "ACKNOWLEDGED",
+        acknowledgedBy: "physical",
+        acknowledgedAt: "2026-08-08T06:11:00.000Z",
+      },
+    ]);
   });
 });

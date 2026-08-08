@@ -23,6 +23,24 @@ Do not add Redis, Kafka, Socket.IO, Prisma, Mongoose, a separate Express server,
 ## Environment
 Create `.env.local` from `.genesis/spec/ENVIRONMENT.md`.
 
+For the current implementation, also set `DEVICE_ADAPTER=real`,
+`DEVICE_REQUEST_TIMEOUT_MS=2000`, and `NEXT_PUBLIC_DEVICE_ID=rf-01`. During
+software-only work, use `DEVICE_ADAPTER=mock` together with
+`NEXT_PUBLIC_DEVICE_ID=mock-device`; the mock runs behind the same route and
+client interfaces as hardware.
+
+## Verify the software handoff
+
+```bash
+bun run typecheck
+bun run lint
+bun run test -- --run
+```
+
+The implemented routes and local run instructions are listed in `README.md`.
+Before judging, run `.genesis/spec/JUDGE-DEMO-CHECKLIST.md` with the real ESP32
+and a reachable MongoDB instance.
+
 ## The one architecture warning you must remember
 The problem statement explicitly requires the **Stage 4 dashboard to be hosted directly by the device itself**. A normal Next.js app running on a laptop/server does **not** satisfy that line by itself. Therefore:
 - Main polished dashboard: Next.js (your software/frontend team).
