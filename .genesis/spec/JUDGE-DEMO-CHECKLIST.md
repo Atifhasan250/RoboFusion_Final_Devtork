@@ -1,24 +1,35 @@
-# Judge Demo Checklist — run in this order
+# Judge demo checklist — software + hardware integration
 
-Because credit stops at the first failed stage, do not jump ahead.
+This checklist verifies the software mirror without claiming that MongoDB is
+Stage 8 device storage or that Next.js is the Stage 4 device-hosted page.
 
-- [ ] S1: steady LED + IR every ~1 s; trigger/disconnect IR; no blink freeze.
-- [ ] S2: DHT every ~5 s; disconnect DHT; IR/LED continue.
-- [ ] S3: first-run AP/setup page; save SSID/password/device name; power cycle reconnect; button reset; unreachable WiFi → setup in ~10–15 s.
-- [ ] S4: open device-hosted dashboard; camera + both sensors auto-update ~1–2 s; failed frame does not break page.
-- [ ] S5: OCCUPIED/EMPTY changes in ~1–2 s, no flicker, lighting-only change does not falsely trigger.
-- [ ] S6: show shuffled trained cards and at least one untrained color; trained recognized, untrained UNKNOWN.
-- [ ] S7: generate >256 results; dashboard contains exactly 256 in correct order.
-- [ ] S8: show on-device storage limit 150–180 KB and cleared counter after eviction.
-- [ ] S9: disconnect WiFi while events continue; reconnect; show OFFLINE→CATCHING_UP→LIVE and exactly-once ordered catch-up.
-- [ ] S10: search a recent range; then a pre-start range and show clean empty result.
-- [ ] S11: move toward danger; trend reacts without alarm; cross stable danger threshold; buzzer/relay activates; boundary jitter does not flicker.
-- [ ] S12: same alert, physical + dashboard ACK at same moment → exactly one acknowledgement; second alert stays independent.
-- [ ] S13: power off ~10 s, restore and recover within ~20 s; repeat a second time.
+## Before the demo
 
-## Before judges arrive
-- [ ] Save screenshots/photos needed for documentation.
-- [ ] Write exact Stage 11 thresholds in docs.
-- [ ] Confirm Mongo/network URLs are correct.
-- [ ] Clear only demo data that is safe to clear; do not reset required device state accidentally.
-- [ ] Have Serial Monitor ready for Stages 1–2/verification.
+- Set `MONGODB_URI`, `MONGODB_DB`, `DEVICE_BASE_URL`, and
+  `NEXT_PUBLIC_DEVICE_CAMERA_URL`.
+- Set `DEVICE_ADAPTER=real`; use `mock` only while the ESP32 is unavailable.
+- Confirm the ESP32 exposes the four endpoints in `HARDWARE-HANDOFF.md`.
+- Run `bun run typecheck`, `bun run lint`, and `bun run test -- --run`.
+
+## Ordered proof
+
+1. POST one event, then the same event again to `/api/telemetry/ingest`.
+   Confirm the second response reports one duplicate and Mongo has one row.
+2. POST an ascending catch-up batch, retry it, and confirm its stored `seq`
+   order is unchanged with no duplicate rows.
+3. Query `/api/history` with before/inside/after fixtures. Confirm only inclusive
+   in-range events are returned oldest to newest; an old empty range returns
+   `{ "items": [], "count": 0 }`.
+4. Set the dashboard to poll the typed hook every second and compare the state
+   values with the ESP32 Serial Monitor. Confirm camera failure retains the last
+   successful frame in the frontend component.
+5. Trigger one Danger episode. Send two dashboard ACK requests while pressing
+   the physical button; confirm the device accepts exactly one and Mongo has one
+   document for that `alertId`.
+6. Trigger another Danger episode and confirm it has a new `alertId` and remains
+   independent.
+7. Disconnect WiFi for about three minutes, reconnect, and confirm queued events
+   arrive exactly once in original `seq` order while the device shows
+   `OFFLINE → CATCHING_UP → LIVE`.
+8. Power-cycle twice. Confirm the device-hosted page, device storage, alarm state,
+   and physical outputs recover within the Stage 13 target.
