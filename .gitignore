@@ -19,6 +19,8 @@
 
 # production
 /build
+/hardware/firmware/.pio/
+/hardware/.tools/
 
 # misc
 .DS_Store

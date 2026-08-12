@@ -1,0 +1,31 @@
+name: RoboFusion timing and sensor smoke test
+version: 1
+author: DevTork
+steps:
+  - wait-serial: 'ROBOFUSION_READY profile=WOKWI'
+  - wait-serial: 'IR connected=true'
+  - set-control:
+      part-id: dht
+      control: temperature
+      value: 36
+  - set-control:
+      part-id: dht
+      control: humidity
+      value: 88
+  - wait-serial: 'DHT connected=true temperature=36.0 humidity=88.0'
+  - wait-serial: 'SAFETY status=DANGER'
+  - expect-pin:
+      part-id: esp
+      pin: 12
+      expected: 0
+  - set-control:
+      part-id: button
+      control: pressed
+      value: 1
+  - delay: 200ms
+  - set-control:
+      part-id: button
+      control: pressed
+      value: 0
+  - wait-serial: 'ACK winner'
+

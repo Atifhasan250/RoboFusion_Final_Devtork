@@ -1,0 +1,9 @@
+[wokwi]
+version = 1
+firmware = '../firmware/.pio/build/wokwi/firmware.bin'
+elf = '../firmware/.pio/build/wokwi/firmware.elf'
+
+[[net.forward]]
+from = 'localhost:8180'
+to = 'target:80'
+
