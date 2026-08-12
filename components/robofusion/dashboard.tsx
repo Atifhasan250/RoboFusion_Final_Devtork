@@ -15,6 +15,7 @@ import {
   Droplet,
   Fingerprint,
   HardDrive,
+  Play,
   Radar,
   Search,
   ShieldCheck,
@@ -24,13 +25,10 @@ import {
   Trash,
   Wifi,
   WifiOff,
+  X,
 } from "@/components/robofusion/icons";
 import { useRoboFusionData } from "@/hooks/use-robofusion-data";
-import {
-  acknowledgeAlert,
-  deviceCameraUrl,
-  searchHistory,
-} from "@/lib/api-client";
+import { deviceCameraUrl } from "@/lib/api-client";
 import type { TelemetryEvent } from "@/types/telemetry";
 
 type Tone = "brand" | "danger" | "warn" | "lime" | "neutral";
@@ -194,7 +192,20 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   return <label className="flex flex-col gap-1.5"><span className="text-[12px] font-medium text-ink-2">{label}</span>{children}</label>;
 }
 
+function DemoCameraScene({ presence, marker }: { presence: Presence; marker: Marker }) {
+  const markerColors: Record<Marker, string> = {
+    RED: "bg-danger",
+    BLUE: "bg-[#3b82f6]",
+    YELLOW: "bg-warn",
+    GREEN: "bg-brand",
+    UNKNOWN: "bg-mute",
+  };
+
+  return <div role="img" aria-label={`Simulated camera scene: ${presence.toLowerCase()} with ${marker.toLowerCase()} marker`} className="absolute inset-0 overflow-hidden bg-[linear-gradient(145deg,#dce8df_0%,#f7f8f5_58%,#cdd9d1_100%)]"><div className="absolute inset-x-0 bottom-0 h-[35%] bg-[#c7d2c9] [clip-path:polygon(0_35%,100%_0,100%_100%,0_100%)]" /><div className="absolute left-[8%] top-[12%] rounded-full border border-white/60 bg-card/75 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-2 shadow-sm backdrop-blur">Simulated camera input</div>{presence === "OCCUPIED" && <div className="absolute bottom-[21%] left-[44%] flex -translate-x-1/2 flex-col items-center" aria-hidden="true"><div className="h-16 w-16 rounded-full bg-ink/80 shadow-lg" /><div className="-mt-1 h-36 w-28 rounded-t-[52px] bg-ink/80 shadow-lg" /></div>}<div className={`absolute bottom-[20%] right-[14%] flex h-[34%] w-[21%] rotate-3 items-center justify-center rounded-xl border-[8px] border-white shadow-xl ${markerColors[marker]}`}><span className="rounded-full bg-black/55 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-white">{marker}</span></div><div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-ink/80 px-4 py-2.5 text-xs text-white"><span>Behavioral preview · not an optical camera claim</span><span className="tnum">640 × 360 SIM</span></div></div>;
+}
+
 export function RoboFusionDashboard() {
+  const [demoMode, setDemoMode] = useState(false);
   const {
     state: deviceState,
     records: deviceRecords,
@@ -204,7 +215,9 @@ export function RoboFusionDashboard() {
     lastSuccessfulDevicePollAt,
     isLoading,
     refresh,
-  } = useRoboFusionData(DEVICE_ID);
+    searchHistory: searchDataHistory,
+    acknowledgeAlert: acknowledgeDataAlert,
+  } = useRoboFusionData(DEVICE_ID, demoMode);
   const [nav, setNav] = useState<NavItem>("Dashboard");
   const [sortDesc, setSortDesc] = useState(true);
   const [cameraDegraded, setCameraDegraded] = useState(!deviceCameraUrl);
@@ -218,6 +231,7 @@ export function RoboFusionDashboard() {
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [acknowledgingId, setAcknowledgingId] = useState<string | null>(null);
+  const [acknowledgementError, setAcknowledgementError] = useState<string | null>(null);
 
   const topRef = useRef<HTMLDivElement>(null);
   const cameraRef = useRef<HTMLDivElement>(null);
@@ -248,12 +262,22 @@ export function RoboFusionDashboard() {
   async function acknowledgeCurrent(id: string) {
     if (id !== deviceState?.alert?.alertId) return;
     setAcknowledgingId(id);
+    setAcknowledgementError(null);
     try {
-      await acknowledgeAlert(id, crypto.randomUUID());
-      await refresh();
+      await acknowledgeDataAlert(id, crypto.randomUUID());
+    } catch (error) {
+      setAcknowledgementError(error instanceof Error ? error.message : "Acknowledgement failed. Try again.");
     } finally {
       setAcknowledgingId(null);
     }
+  }
+
+  function toggleDemoMode() {
+    setDemoMode((current) => !current);
+    setResults(null);
+    setSearchedRange(null);
+    setHistoryError(null);
+    setAcknowledgementError(null);
   }
 
   async function runSearch() {
@@ -278,12 +302,8 @@ export function RoboFusionDashboard() {
     setHistoryLoading(true);
     setHistoryError(null);
     try {
-      const response = await searchHistory(
-        DEVICE_ID,
-        startDate.toISOString(),
-        endDate.toISOString(),
-      );
-      setResults(response.items.map(toDemoRecord).sort((left, right) => right.id - left.id));
+      const items = await searchDataHistory(startDate, endDate);
+      setResults(items.map(toDemoRecord).sort((left, right) => right.id - left.id));
       setSearchedRange(`${from} → ${to}`);
     } catch (error) {
       setResults([]);
@@ -302,12 +322,8 @@ export function RoboFusionDashboard() {
     setHistoryLoading(true);
     setHistoryError(null);
     try {
-      const response = await searchHistory(
-        DEVICE_ID,
-        startDate.toISOString(),
-        endDate.toISOString(),
-      );
-      setResults(response.items.map(toDemoRecord).sort((left, right) => right.id - left.id));
+      const items = await searchDataHistory(startDate, endDate);
+      setResults(items.map(toDemoRecord).sort((left, right) => right.id - left.id));
       setSearchedRange(`${startDate.toISOString().slice(11, 16)} → ${endDate.toISOString().slice(11, 16)} · Last 2 minutes`);
     } catch (error) {
       setResults([]);
@@ -366,7 +382,7 @@ export function RoboFusionDashboard() {
         ? "Physical push-button"
         : "Dashboard",
   }));
-  const cameraWarning = cameraDegraded || !deviceCameraUrl;
+  const cameraWarning = !demoMode && (cameraDegraded || !deviceCameraUrl);
 
   function captureCameraFrame(image: HTMLImageElement) {
     const canvas = cameraCanvasRef.current;
@@ -386,14 +402,18 @@ export function RoboFusionDashboard() {
   const connectionIcon = connection === "LIVE" ? <Wifi width={13} height={13} /> : connection === "OFFLINE" ? <WifiOff width={13} height={13} /> : <Sync width={13} height={13} className="animate-spin" />;
 
   return <div className="min-h-screen bg-page text-ink">
-    <header className="sticky top-0 z-30 border-b border-line bg-page/85 backdrop-blur-md"><div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between gap-4 px-6 lg:px-8"><div className="flex items-center gap-2.5"><div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-white"><Camera width={18} height={18} /></div><span className="text-[16px] font-semibold tracking-tight">RoboFusion Monitor</span></div><nav aria-label="Dashboard sections" className="hidden items-center gap-1 rounded-full border border-line bg-card p-1 md:flex">{NAV.map((item) => <button key={item} onClick={() => goTo(item)} className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${nav === item ? "bg-ink text-white" : "text-ink-2 hover:text-ink"}`}>{item}</button>)}</nav><div className="flex items-center gap-2"><button onClick={() => void refresh()} title="Refresh device state" className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-3 py-1.5"><Pill tone={connectionConfig[connection].tone}>{connectionIcon}{connectionConfig[connection].label}</Pill></button><button aria-label="Device details" className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-card text-ink-2 transition-colors hover:text-ink"><Cpu width={17} height={17} /></button><button aria-label="Alerts" onClick={() => goTo("Alerts")} className="relative flex h-9 w-9 items-center justify-center rounded-full border border-line bg-card text-ink-2 transition-colors hover:text-ink"><AlertTriangle width={16} height={16} />{visibleAlerts.length > 0 && <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-danger" />}</button></div></div></header>
+    <header className="sticky top-0 z-30 border-b border-line bg-page/85 backdrop-blur-md"><div className="mx-auto flex min-h-[72px] max-w-[1440px] items-center justify-between gap-3 px-4 py-2 sm:px-6 lg:px-8"><div className="flex min-w-0 items-center gap-2.5"><div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand text-white"><Camera width={18} height={18} /></div><span className="truncate text-[16px] font-semibold tracking-tight">RoboFusion Monitor</span></div><nav aria-label="Dashboard sections" className="hidden items-center gap-1 rounded-full border border-line bg-card p-1 md:flex">{NAV.map((item) => <button key={item} onClick={() => goTo(item)} className={`min-h-11 rounded-full px-4 text-[13px] font-medium transition-colors ${nav === item ? "bg-ink text-white" : "text-ink-2 hover:text-ink"}`}>{item}</button>)}</nav><div className="flex shrink-0 items-center gap-2"><button aria-pressed={demoMode} onClick={toggleDemoMode} className={`inline-flex min-h-11 items-center gap-2 rounded-full px-3.5 text-sm font-semibold transition-colors ${demoMode ? "border border-brand/25 bg-brand-soft text-brand-strong" : "bg-brand text-white hover:bg-brand-strong"}`}>{demoMode ? <X width={15} height={15} /> : <Play width={15} height={15} />}<span className="hidden sm:inline">{demoMode ? "Exit Demo" : "Simulate Demo"}</span><span className="sm:hidden">{demoMode ? "Exit" : "Demo"}</span></button><button onClick={() => void refresh()} aria-label="Refresh device state" title="Refresh device state" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-card px-3"><Pill tone={connectionConfig[connection].tone}>{connectionIcon}{demoMode ? "Simulation" : connectionConfig[connection].label}</Pill></button><button aria-label="Alerts" onClick={() => goTo("Alerts")} className="relative flex h-11 w-11 items-center justify-center rounded-full border border-line bg-card text-ink-2 transition-colors hover:text-ink"><AlertTriangle width={16} height={16} />{visibleAlerts.length > 0 && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-danger" />}</button></div></div></header>
 
     <main className="mx-auto max-w-[1440px] space-y-5 px-6 py-7 lg:px-8">
-      <div ref={topRef} className="flex scroll-mt-[90px] flex-wrap items-end justify-between gap-3"><div><h1 className="text-[30px] font-semibold tracking-tight text-ink">Welcome to RoboFusion Monitor</h1><p className="mt-1 text-[14px] text-ink-2">Real-time safety monitoring with a separate ESP32-hosted fallback dashboard.</p></div><div className="flex items-center gap-4 text-[13px] text-ink-2"><Heartbeat alive={deviceReachable} /><span className="tnum">{isLoading ? "Connecting…" : deviceReachable && deviceState ? `Last update ${deviceState.occurredAt.slice(11, 19)}` : lastSuccessfulDevicePollAt ? `Offline · last reached ${lastSuccessfulDevicePollAt.slice(11, 19)}` : "Device unavailable · no live values"}</span></div></div>
+      <div ref={topRef} className="flex scroll-mt-[90px] flex-wrap items-end justify-between gap-3"><div><h1 className="text-[30px] font-semibold tracking-tight text-ink">Welcome to RoboFusion Monitor</h1><p className="mt-1 text-[14px] text-ink-2">Real-time safety monitoring with a separate ESP32-hosted fallback dashboard.</p></div><div className="flex items-center gap-4 text-[13px] text-ink-2"><Heartbeat alive={deviceReachable} /><span className="tnum">{isLoading ? "Connecting…" : demoMode && deviceState ? `Simulation update ${deviceState.occurredAt.slice(11, 19)}` : deviceReachable && deviceState ? `Last update ${deviceState.occurredAt.slice(11, 19)}` : lastSuccessfulDevicePollAt ? `Offline · last reached ${lastSuccessfulDevicePollAt.slice(11, 19)}` : "Device unavailable · no live values"}</span></div></div>
+
+      {demoMode && <section role="status" aria-live="polite" className="flex flex-col gap-3 rounded-[20px] border border-brand/20 bg-brand-soft px-5 py-4 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-start gap-3"><IconCircle><Play width={17} height={17} /></IconCircle><div><h2 className="text-sm font-semibold text-ink">Portfolio simulation is running</h2><p className="mt-0.5 text-[13px] leading-5 text-ink-2">Deterministic demo telemetry fills the 256-record buffer and cycles safety, marker, connection, storage, history, and alert states. It is clearly separated from real ESP32 evidence.</p></div></div><Pill tone="brand" className="shrink-0">No hardware required</Pill></section>}
 
       <section aria-live="assertive">{visibleAlerts.length === 0 ? <Card className="flex flex-wrap items-center justify-between gap-3 px-6 py-4"><span className="flex items-center gap-2.5 text-sm"><IconCircle><ShieldCheck width={18} height={18} /></IconCircle><span><span className="font-medium text-ink">No active alerts</span><span className="ml-2 text-ink-2">{deviceError ?? "All danger conditions clear."}</span></span></span></Card> : <div className="space-y-3">{visibleAlerts.map((alert) => <div key={alert.id} className="flex flex-col gap-4 rounded-[20px] border border-danger/25 bg-danger-soft px-6 py-4 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-start gap-3"><IconCircle tone="danger"><AlertTriangle width={19} height={19} /></IconCircle><div><div className="flex flex-wrap items-center gap-2"><h3 className="text-[15px] font-semibold text-ink">Safety Alert</h3><span className="tnum text-xs text-danger">{alert.id}</span><Pill tone="danger">Pending</Pill></div><p className="mt-0.5 text-sm text-ink">{alert.condition}.</p><p className="mt-0.5 tnum text-xs text-ink-2">Triggered {alert.triggeredAt}</p></div></div><div className="flex shrink-0 items-center gap-2"><span title="Use the physical device push-button" className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full border border-line bg-card px-3.5 text-sm text-ink-2"><Fingerprint width={15} height={15} />Push-button on device</span><button disabled={acknowledgingId === alert.id} onClick={() => void acknowledgeCurrent(alert.id)} className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full bg-danger px-4 text-sm font-semibold text-white transition-colors hover:brightness-105 disabled:cursor-wait disabled:opacity-60"><Check width={16} height={16} />{acknowledgingId === alert.id ? "Acknowledging…" : "Acknowledge"}</button></div></div>)}</div>}</section>
 
-      <div ref={cameraRef} className="grid scroll-mt-[90px] grid-cols-1 gap-5 lg:grid-cols-12"><Card className="lg:col-span-8"><CardHead title="Live Camera" icon={<Camera width={16} height={16} />} aside={<div className="flex items-center gap-3"><span className="inline-flex items-center gap-1.5 text-[13px] text-ink-2"><span className={`h-2 w-2 rounded-full ${cameraWarning ? "bg-mute" : "bg-danger animate-live-dot"}`} />{cameraWarning ? "Unavailable" : "Live"} · {deviceState?.occurredAt.slice(11, 19) ?? "—"}</span>{cameraWarning && deviceCameraUrl && <button onClick={() => { setCameraRetry((value) => value + 1); setCameraDegraded(false); }} className="text-[13px] text-ink-2 transition-colors hover:text-ink">Retry</button>}</div>} /><div className="p-6 pt-4"><div className="relative aspect-video overflow-hidden rounded-2xl border border-line bg-soft"><canvas ref={cameraCanvasRef} aria-label="Last successfully received device camera frame" className={`h-full w-full object-cover ${hasCameraFrame ? "block" : "hidden"}`} />{!hasCameraFrame && <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-ink-2"><Camera width={32} height={32} /><span className="text-sm">No camera frame available</span></div>}{deviceCameraUrl && !cameraDegraded && <img key={cameraRetry} src={deviceCameraUrl} alt="Live view from the RoboFusion device" onLoad={(event) => captureCameraFrame(event.currentTarget)} onError={() => setCameraDegraded(true)} className="absolute inset-0 h-full w-full object-cover" />}<div className="absolute left-4 top-4 flex flex-wrap items-center gap-2"><span className="rounded-full bg-card/90 p-0.5 pr-0.5 shadow-sm backdrop-blur"><PresenceBadge presence={currentPresence} /></span><span className="rounded-full bg-card/90 p-0.5 shadow-sm backdrop-blur"><MarkerBadge marker={currentMarker} /></span></div>{cameraWarning && <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-ink/70 px-4 py-2.5 text-xs text-white backdrop-blur-sm"><AlertTriangle width={14} height={14} />{hasCameraFrame ? "Showing last successful device frame · live feed unavailable" : deviceCameraUrl ? "Camera feed unavailable · no successful frame received" : "Camera URL is not configured · no frame available"}</div>}</div></div></Card><div className="space-y-5 lg:col-span-4"><Card className="p-6"><div className="flex items-center justify-between"><h2 className="text-[16px] font-semibold text-ink">Presence</h2><PresenceBadge presence={currentPresence} /></div><div className="mt-3 flex items-end gap-1.5"><span className="text-[42px] font-semibold leading-none text-ink">{currentPresence === "OCCUPIED" ? "Occupied" : currentPresence === "EMPTY" ? "Empty" : "Unknown"}</span></div><div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-soft"><div className={`h-full rounded-full ${currentPresence === "UNKNOWN" ? "w-1/3 bg-warn" : "w-full bg-brand"}`} /></div><p className="mt-3 text-[13px] text-ink-2">Device accepts a change only after the state stays stable for ~1s.</p></Card><Card className="p-6"><div className="flex items-center justify-between"><span className="text-[13px] font-medium text-ink-2">Overall Status</span><OverallPill status={currentOverall} /></div><div className="mt-2 flex items-center gap-2.5"><IconCircle tone={currentOverall === "DANGER" ? "danger" : currentOverall === "WARNING" ? "warn" : currentOverall ? "brand" : "neutral"}>{currentOverall === "SAFE" ? <ShieldCheck width={19} height={19} /> : <AlertTriangle width={19} height={19} />}</IconCircle><div><div className="text-[22px] font-semibold capitalize text-ink">{currentOverall?.toLowerCase() ?? "Unavailable"}</div><div className="text-[12px] text-ink-2">Device-authoritative safety state</div></div></div><div className="my-4 h-px bg-line" /><div className="flex items-center justify-between"><span className="text-[13px] font-medium text-ink-2">Early-Warning Trend</span><Pill tone={currentTrend ? "lime" : "neutral"}>{currentTrend ? currentTrend.charAt(0) + currentTrend.slice(1).toLowerCase() : "Unavailable"}</Pill></div><p className="mt-1.5 text-[12px] text-ink-2">Trend only · does not activate alarm</p></Card></div></div>
+      {acknowledgementError && <p role="alert" className="text-sm text-danger">{acknowledgementError}</p>}
+
+      <div ref={cameraRef} className="grid scroll-mt-[90px] grid-cols-1 gap-5 lg:grid-cols-12"><Card className="lg:col-span-8"><CardHead title={demoMode ? "Simulation Camera" : "Live Camera"} icon={<Camera width={16} height={16} />} aside={<div className="flex items-center gap-3"><span className="inline-flex items-center gap-1.5 text-[13px] text-ink-2"><span className={`h-2 w-2 rounded-full ${cameraWarning ? "bg-mute" : "bg-danger animate-live-dot"}`} />{demoMode ? "Simulated" : cameraWarning ? "Unavailable" : "Live"} · {deviceState?.occurredAt.slice(11, 19) ?? "—"}</span>{cameraWarning && deviceCameraUrl && <button onClick={() => { setCameraRetry((value) => value + 1); setCameraDegraded(false); }} className="min-h-11 px-2 text-[13px] text-ink-2 transition-colors hover:text-ink">Retry</button>}</div>} /><div className="p-6 pt-4"><div className="relative aspect-video overflow-hidden rounded-2xl border border-line bg-soft">{demoMode && <DemoCameraScene presence={currentPresence} marker={currentMarker} />}<canvas ref={cameraCanvasRef} aria-label="Last successfully received device camera frame" className={`h-full w-full object-cover ${!demoMode && hasCameraFrame ? "block" : "hidden"}`} />{!demoMode && !hasCameraFrame && <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-ink-2"><Camera width={32} height={32} /><span className="text-sm">No camera frame available</span></div>}{!demoMode && deviceCameraUrl && !cameraDegraded && <img key={cameraRetry} src={deviceCameraUrl} alt="Live view from the RoboFusion device" onLoad={(event) => captureCameraFrame(event.currentTarget)} onError={() => setCameraDegraded(true)} className="absolute inset-0 h-full w-full object-cover" />}<div className="absolute left-4 top-4 flex flex-wrap items-center gap-2"><span className="rounded-full bg-card/90 p-0.5 pr-0.5 shadow-sm backdrop-blur"><PresenceBadge presence={currentPresence} /></span><span className="rounded-full bg-card/90 p-0.5 shadow-sm backdrop-blur"><MarkerBadge marker={currentMarker} /></span></div>{cameraWarning && <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-ink/70 px-4 py-2.5 text-xs text-white backdrop-blur-sm"><AlertTriangle width={14} height={14} />{hasCameraFrame ? "Showing last successful device frame · live feed unavailable" : deviceCameraUrl ? "Camera feed unavailable · no successful frame received" : "Camera URL is not configured · no frame available"}</div>}</div></div></Card><div className="space-y-5 lg:col-span-4"><Card className="p-6"><div className="flex items-center justify-between"><h2 className="text-[16px] font-semibold text-ink">Presence</h2><PresenceBadge presence={currentPresence} /></div><div className="mt-3 flex items-end gap-1.5"><span className="text-[42px] font-semibold leading-none text-ink">{currentPresence === "OCCUPIED" ? "Occupied" : currentPresence === "EMPTY" ? "Empty" : "Unknown"}</span></div><div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-soft"><div className={`h-full rounded-full ${currentPresence === "UNKNOWN" ? "w-1/3 bg-warn" : "w-full bg-brand"}`} /></div><p className="mt-3 text-[13px] text-ink-2">{demoMode ? "Simulation applies the same ~1s accepted-state behavior." : "Device accepts a change only after the state stays stable for ~1s."}</p></Card><Card className="p-6"><div className="flex items-center justify-between"><span className="text-[13px] font-medium text-ink-2">Overall Status</span><OverallPill status={currentOverall} /></div><div className="mt-2 flex items-center gap-2.5"><IconCircle tone={currentOverall === "DANGER" ? "danger" : currentOverall === "WARNING" ? "warn" : currentOverall ? "brand" : "neutral"}>{currentOverall === "SAFE" ? <ShieldCheck width={19} height={19} /> : <AlertTriangle width={19} height={19} />}</IconCircle><div><div className="text-[22px] font-semibold capitalize text-ink">{currentOverall?.toLowerCase() ?? "Unavailable"}</div><div className="text-[12px] text-ink-2">{demoMode ? "Simulated device-authoritative state" : "Device-authoritative safety state"}</div></div></div><div className="my-4 h-px bg-line" /><div className="flex items-center justify-between"><span className="text-[13px] font-medium text-ink-2">Early-Warning Trend</span><Pill tone={currentTrend ? "lime" : "neutral"}>{currentTrend ? currentTrend.charAt(0) + currentTrend.slice(1).toLowerCase() : "Unavailable"}</Pill></div><p className="mt-1.5 text-[12px] text-ink-2">Trend only · does not activate alarm</p></Card></div></div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"><Metric icon={<Thermometer width={18} height={18} />} label="Temperature" value={temperature} unit="°C" sub={deviceState?.climate.connected === false ? "DHT11 sensor disconnected" : "DHT11 sensor · every 5s"} /><Metric icon={<Droplet width={18} height={18} />} label="Humidity" value={humidity} unit="%" sub={deviceState?.climate.connected === false ? "DHT11 sensor disconnected" : "DHT11 sensor · every 5s"} /><Card className="p-5"><div className="flex items-start justify-between"><IconCircle tone={!irConnected ? "warn" : obstacle ? "danger" : "brand"}><Radar width={18} height={18} /></IconCircle><Pill tone={!irConnected ? "warn" : obstacle ? "danger" : "brand"}>{!irConnected ? "Error" : obstacle ? "Obstacle" : "Clear"}</Pill></div><div className="mt-4 text-[13px] font-medium text-ink-2">IR Obstacle</div><div className="mt-0.5 text-[26px] font-semibold text-ink">{!irConnected ? "Disconnected" : obstacle ? "Obstacle detected" : "No obstacle"}</div><p className="mt-1 text-[12px] text-ink-2">Updated automatically · every 1s</p></Card><Card className="p-5"><div className="flex items-start justify-between"><IconCircle tone="lime"><Tag width={18} height={18} /></IconCircle><span className={`h-6 w-6 rounded-full ring-2 ring-card ${swatch[currentMarker]}`} /></div><div className="mt-4 text-[13px] font-medium text-ink-2">Color Marker</div><div className="mt-0.5 text-[26px] font-semibold capitalize text-ink">{currentMarker.toLowerCase()}</div><div className="mt-2 flex items-center gap-1.5">{[["Red", "bg-danger"], ["Blue", "bg-[#3b82f6]"], ["Yellow", "bg-warn"], ["Green", "bg-brand"]].map(([name, color]) => <span key={name} title={name} className={`h-3 w-3 rounded-full ${color}`} />)}<span className="ml-1 text-[12px] text-ink-2">recognized set</span></div></Card></div>
 

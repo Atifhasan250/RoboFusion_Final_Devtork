@@ -3,11 +3,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
+  acknowledgeAlert as acknowledgeRealAlert,
   getAcknowledgements,
   getDeviceRecords,
   getDeviceState,
   getLatestTelemetry,
+  searchHistory as searchRealHistory,
 } from "@/lib/api-client";
+import { DemoSimulator } from "@/lib/demo-simulator";
+import type { AcknowledgementResult } from "@/types/alerts";
 import type { AcknowledgementLogItem } from "@/types/alerts";
 import type { DeviceState, TelemetryEvent } from "@/types/telemetry";
 
@@ -20,9 +24,17 @@ export type RoboFusionData = {
   lastSuccessfulDevicePollAt: string | null;
   isLoading: boolean;
   refresh: () => Promise<void>;
+  searchHistory: (from: Date, to: Date) => Promise<TelemetryEvent[]>;
+  acknowledgeAlert: (
+    alertId: string,
+    requestId: string,
+  ) => Promise<AcknowledgementResult>;
 };
 
-export function useRoboFusionData(deviceId: string): RoboFusionData {
+export function useRoboFusionData(
+  deviceId: string,
+  demoEnabled = false,
+): RoboFusionData {
   const [state, setState] = useState<DeviceState | null>(null);
   const [records, setRecords] = useState<TelemetryEvent[]>([]);
   const [acknowledgements, setAcknowledgements] = useState<
@@ -35,8 +47,26 @@ export function useRoboFusionData(deviceId: string): RoboFusionData {
   >(null);
   const [isLoading, setIsLoading] = useState(true);
   const stateRef = useRef<DeviceState | null>(null);
+  const demoSimulatorRef = useRef<DemoSimulator | null>(null);
+
+  const getDemoSimulator = useCallback(() => {
+    demoSimulatorRef.current ??= new DemoSimulator();
+    return demoSimulatorRef.current;
+  }, []);
 
   const refresh = useCallback(async () => {
+    if (demoEnabled) {
+      const snapshot = getDemoSimulator().snapshot();
+      stateRef.current = snapshot.state;
+      setState(snapshot.state);
+      setRecords(snapshot.records);
+      setAcknowledgements(snapshot.acknowledgements);
+      setDeviceReachable(true);
+      setLastSuccessfulDevicePollAt(new Date().toISOString());
+      setError(null);
+      setIsLoading(false);
+      return;
+    }
     if (!deviceId) return;
     const [stateResult, recordsResult, acknowledgementResult] =
       await Promise.allSettled([
@@ -74,7 +104,50 @@ export function useRoboFusionData(deviceId: string): RoboFusionData {
       setAcknowledgements(acknowledgementResult.value.items);
     }
     setIsLoading(false);
-  }, [deviceId]);
+  }, [demoEnabled, deviceId, getDemoSimulator]);
+
+  const searchHistory = useCallback(
+    async (from: Date, to: Date) => {
+      if (demoEnabled) return getDemoSimulator().search(from, to);
+      const response = await searchRealHistory(
+        deviceId,
+        from.toISOString(),
+        to.toISOString(),
+      );
+      return response.items;
+    },
+    [demoEnabled, deviceId, getDemoSimulator],
+  );
+
+  const acknowledgeAlert = useCallback(
+    async (alertId: string, requestId: string) => {
+      if (demoEnabled) {
+        const result = getDemoSimulator().acknowledge(alertId, requestId);
+        await refresh();
+        return result;
+      }
+      const result = await acknowledgeRealAlert(alertId, requestId);
+      await refresh();
+      return result;
+    },
+    [demoEnabled, getDemoSimulator, refresh],
+  );
+
+  useEffect(() => {
+    const reset = window.setTimeout(() => {
+      demoSimulatorRef.current = demoEnabled ? new DemoSimulator() : null;
+      stateRef.current = null;
+      setState(null);
+      setRecords([]);
+      setAcknowledgements([]);
+      setError(null);
+      setDeviceReachable(false);
+      setLastSuccessfulDevicePollAt(null);
+      setIsLoading(true);
+    }, 0);
+
+    return () => window.clearTimeout(reset);
+  }, [demoEnabled]);
 
   useEffect(() => {
     const initial = window.setTimeout(() => void refresh(), 0);
@@ -94,5 +167,7 @@ export function useRoboFusionData(deviceId: string): RoboFusionData {
     lastSuccessfulDevicePollAt,
     isLoading,
     refresh,
+    searchHistory,
+    acknowledgeAlert,
   };
 }

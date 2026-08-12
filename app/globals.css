@@ -45,6 +45,18 @@ body {
 
 button {
   cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgb(21 150 95 / 28%);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: wait;
 }
 
 .tnum {
@@ -113,4 +125,15 @@ button {
 
 .animate-live-dot {
   animation: live-dot 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-live-dot,
+  .animate-spin {
+    animation: none !important;
+  }
 }
